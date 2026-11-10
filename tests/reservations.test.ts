@@ -46,4 +46,17 @@ describe('POST /salles/:id/reservations', () => {
     expect(response.status).toBe(422);
     expect(response.body).toEqual({ code: 'CRENEAU_INVALIDE', message: expect.any(String) });
   });
+
+  it('returns 422 CRENEAU_INVALIDE when the duration is less than 30 minutes', async () => {
+    const response = await postReservation('A', { debut: '09:00', fin: '09:15' });
+
+    expect(response.status).toBe(422);
+    expect(response.body).toEqual({ code: 'CRENEAU_INVALIDE', message: expect.any(String) });
+  });
+
+  it('accepts a duration of exactly 30 minutes', async () => {
+    const response = await postReservation('A', { debut: '09:00', fin: '09:30' });
+
+    expect(response.status).toBe(201);
+  });
 });
