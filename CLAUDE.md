@@ -36,6 +36,9 @@
 - Désigne par `Planning` la liste des réservations d'une salle pour une date.
 - Désigne par `Organisateur` la personne qui réserve, identifiée par son e-mail.
 - N'introduis aucun synonyme de ces notions métier dans le code, les tests ou l'API.
+- Écris le code et les tests en anglais : identifiants, noms de fichiers, méthodes, variables et libellés de tests.
+- Conserve en français les termes métier et leurs attributs (`id`, `nom`, `capacite`, `debut`, `fin`, `date`, `organisateur`, `participants`), par exemple `InMemorySalleRepository.findAll()`.
+- Conserve en français les noms de dossiers `domaine`, `application` et `infrastructure`, les routes, les champs JSON et les codes d'erreur imposés par la spécification.
 
 ## Format de l'API
 
