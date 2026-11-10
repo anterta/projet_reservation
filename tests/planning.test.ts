@@ -43,4 +43,11 @@ describe('GET /salles/:id/planning', () => {
     expect(response.status).toBe(400);
     expect(response.body).toEqual({ code: 'REQUETE_INVALIDE', message: expect.any(String) });
   });
+
+  it('returns 400 REQUETE_INVALIDE when the date is badly formatted', async () => {
+    const response = await request(createApp()).get('/salles/A/planning?date=01/12/2026');
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({ code: 'REQUETE_INVALIDE', message: expect.any(String) });
+  });
 });
