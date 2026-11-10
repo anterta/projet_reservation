@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { Creneau } from '../domaine/Creneau';
-import { PlanningSalle } from '../domaine/PlanningSalle';
+import { PlanningRepository } from '../domaine/PlanningRepository';
 import { Reservation } from '../domaine/Reservation';
 import { SalleInconnueError } from '../domaine/Salle';
 import { SalleRepository } from '../domaine/SalleRepository';
@@ -15,14 +15,17 @@ export interface ReserveSalleCommand {
 }
 
 export class ReserveSalle {
-  constructor(private readonly salleRepository: SalleRepository) {}
+  constructor(
+    private readonly salleRepository: SalleRepository,
+    private readonly planningRepository: PlanningRepository,
+  ) {}
 
   execute(command: ReserveSalleCommand): Reservation {
     const salle = this.salleRepository.findById(command.salleId);
     if (!salle) {
       throw new SalleInconnueError(command.salleId);
     }
-    const planning = new PlanningSalle(salle, command.date);
+    const planning = this.planningRepository.findBySalleAndDate(salle, command.date);
     const reservation = new Reservation(
       randomUUID(),
       salle.id,
@@ -32,6 +35,7 @@ export class ReserveSalle {
       command.participants,
     );
     planning.add(reservation);
+    this.planningRepository.save(planning);
     return reservation;
   }
 }

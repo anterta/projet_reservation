@@ -3,7 +3,9 @@ import { ListSalles } from '../application/ListSalles';
 import { ReserveSalle } from '../application/ReserveSalle';
 import { DomainError } from '../domaine/DomainError';
 import { Reservation } from '../domaine/Reservation';
+import { PlanningRepository } from '../domaine/PlanningRepository';
 import { SalleRepository } from '../domaine/SalleRepository';
+import { InMemoryPlanningRepository } from './InMemoryPlanningRepository';
 import { InMemorySalleRepository } from './InMemorySalleRepository';
 import { parseReservationRequest } from './reservationRequest';
 import { RequeteInvalideError } from './RequeteInvalideError';
@@ -12,6 +14,7 @@ const statusByCode: Record<string, number> = {
   CRENEAU_INVALIDE: 422,
   CAPACITE_DEPASSEE: 422,
   SALLE_INCONNUE: 404,
+  CHEVAUCHEMENT: 409,
 };
 
 function toReservationResponse(reservation: Reservation) {
@@ -26,12 +29,15 @@ function toReservationResponse(reservation: Reservation) {
   };
 }
 
-export function createApp(salleRepository: SalleRepository = new InMemorySalleRepository()) {
+export function createApp(
+  salleRepository: SalleRepository = new InMemorySalleRepository(),
+  planningRepository: PlanningRepository = new InMemoryPlanningRepository(),
+) {
   const app = express();
   app.use(express.json());
 
   const listSalles = new ListSalles(salleRepository);
-  const reserveSalle = new ReserveSalle(salleRepository);
+  const reserveSalle = new ReserveSalle(salleRepository, planningRepository);
 
   app.get('/salles', (_request, response) => {
     const salles = listSalles.execute().map(({ id, nom, capacite }) => ({ id, nom, capacite }));

@@ -42,4 +42,8 @@ export class Creneau {
     }
     return new Creneau(debut, fin);
   }
+
+  overlaps(other: Creneau): boolean {
+    return toMinutes(this.debut) < toMinutes(other.fin) && toMinutes(other.debut) < toMinutes(this.fin);
+  }
 }
