@@ -5,6 +5,8 @@ import { DomainError } from '../domaine/DomainError';
 import { Reservation } from '../domaine/Reservation';
 import { SalleRepository } from '../domaine/SalleRepository';
 import { InMemorySalleRepository } from './InMemorySalleRepository';
+import { parseReservationRequest } from './reservationRequest';
+import { RequeteInvalideError } from './RequeteInvalideError';
 
 const statusByCode: Record<string, number> = {
   CRENEAU_INVALIDE: 422,
@@ -37,19 +39,18 @@ export function createApp(salleRepository: SalleRepository = new InMemorySalleRe
   });
 
   app.post('/salles/:id/reservations', (request, response) => {
-    const { date, debut, fin, organisateur, participants } = request.body;
     const reservation = reserveSalle.execute({
       salleId: request.params.id,
-      date,
-      debut,
-      fin,
-      organisateur,
-      participants,
+      ...parseReservationRequest(request.body),
     });
     response.status(201).json(toReservationResponse(reservation));
   });
 
   app.use((error: unknown, _request: Request, response: Response, next: NextFunction) => {
+    if (error instanceof RequeteInvalideError) {
+      response.status(400).json({ code: error.code, message: error.message });
+      return;
+    }
     if (error instanceof DomainError) {
       response.status(statusByCode[error.code]).json({ code: error.code, message: error.message });
       return;
