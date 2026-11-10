@@ -52,6 +52,10 @@ export function createApp(
     response.status(201).json(toReservationResponse(reservation));
   });
 
+  app.get('/salles/:id/planning', (_request, response) => {
+    response.status(200).json([]);
+  });
+
   app.use((error: unknown, _request: Request, response: Response, next: NextFunction) => {
     if (error instanceof RequeteInvalideError) {
       response.status(400).json({ code: error.code, message: error.message });
