@@ -124,4 +124,11 @@ describe('POST /salles/:id/reservations', () => {
 
     expect(response.status).toBe(201);
   });
+
+  it('returns 404 SALLE_INCONNUE when the salle does not exist', async () => {
+    const response = await postReservation('Z');
+
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({ code: 'SALLE_INCONNUE', message: expect.any(String) });
+  });
 });
