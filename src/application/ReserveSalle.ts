@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { Creneau } from '../domaine/Creneau';
+import { PlanningSalle } from '../domaine/PlanningSalle';
 import { Reservation } from '../domaine/Reservation';
 
 export interface ReserveSalleCommand {
@@ -13,7 +14,8 @@ export interface ReserveSalleCommand {
 
 export class ReserveSalle {
   execute(command: ReserveSalleCommand): Reservation {
-    return new Reservation(
+    const planning = new PlanningSalle(command.salleId, command.date);
+    const reservation = new Reservation(
       randomUUID(),
       command.salleId,
       command.date,
@@ -21,5 +23,7 @@ export class ReserveSalle {
       command.organisateur,
       command.participants,
     );
+    planning.add(reservation);
+    return reservation;
   }
 }

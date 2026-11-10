@@ -8,6 +8,7 @@ import { InMemorySalleRepository } from './InMemorySalleRepository';
 
 const statusByCode: Record<string, number> = {
   CRENEAU_INVALIDE: 422,
+  CAPACITE_DEPASSEE: 422,
 };
 
 function toReservationResponse(reservation: Reservation) {
