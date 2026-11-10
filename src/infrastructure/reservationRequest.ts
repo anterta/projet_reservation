@@ -1,6 +1,7 @@
 import { RequeteInvalideError } from './RequeteInvalideError';
 
-const REQUIRED_FIELDS = ['date', 'debut', 'fin', 'organisateur', 'participants'] as const;
+const DATE_FORMAT = /^\d{4}-\d{2}-\d{2}$/;
+const HEURE_FORMAT = /^([01]\d|2[0-3]):[0-5]\d$/;
 
 export interface ReservationRequest {
   date: string;
@@ -10,11 +11,24 @@ export interface ReservationRequest {
   participants: number;
 }
 
-export function parseReservationRequest(body: Record<string, unknown>): ReservationRequest {
-  const missing = REQUIRED_FIELDS.filter((field) => body?.[field] === undefined);
-  if (missing.length > 0) {
-    throw new RequeteInvalideError(`missing fields: ${missing.join(', ')}`);
+function matches(value: unknown, format: RegExp): value is string {
+  return typeof value === 'string' && format.test(value);
+}
+
+export function parseReservationRequest(body: unknown): ReservationRequest {
+  const { date, debut, fin, organisateur, participants } = (body ?? {}) as Record<string, unknown>;
+
+  if (
+    !matches(date, DATE_FORMAT) ||
+    !matches(debut, HEURE_FORMAT) ||
+    !matches(fin, HEURE_FORMAT) ||
+    typeof organisateur !== 'string' ||
+    organisateur === '' ||
+    !Number.isInteger(participants)
+  ) {
+    throw new RequeteInvalideError(
+      'expected { date: "AAAA-MM-JJ", debut: "HH:MM", fin: "HH:MM", organisateur, participants }',
+    );
   }
-  const { date, debut, fin, organisateur, participants } = body as unknown as ReservationRequest;
-  return { date, debut, fin, organisateur, participants };
+  return { date, debut, fin, organisateur, participants: participants as number };
 }
