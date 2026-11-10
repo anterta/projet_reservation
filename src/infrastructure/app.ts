@@ -8,6 +8,7 @@ import { PlanningRepository } from '../domaine/PlanningRepository';
 import { SalleRepository } from '../domaine/SalleRepository';
 import { InMemoryPlanningRepository } from './InMemoryPlanningRepository';
 import { InMemorySalleRepository } from './InMemorySalleRepository';
+import { parsePlanningDate } from './planningRequest';
 import { parseReservationRequest } from './reservationRequest';
 import { RequeteInvalideError } from './RequeteInvalideError';
 
@@ -55,7 +56,10 @@ export function createApp(
   });
 
   app.get('/salles/:id/planning', (request, response) => {
-    const reservations = consultPlanning.execute(request.params.id, String(request.query.date));
+    const reservations = consultPlanning.execute(
+      request.params.id,
+      parsePlanningDate(request.query.date),
+    );
     response.status(200).json(reservations.map(toReservationResponse));
   });
 
