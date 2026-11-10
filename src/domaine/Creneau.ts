@@ -7,6 +7,7 @@ export class CreneauInvalideError extends DomainError {
 }
 
 const MIN_DURATION_IN_MINUTES = 30;
+const MAX_DURATION_IN_MINUTES = 4 * 60;
 
 function toMinutes(heure: string): number {
   const [hours, minutes] = heure.split(':').map(Number);
@@ -30,8 +31,9 @@ export class Creneau {
     if (!isOnQuarterHour(debutInMinutes) || !isOnQuarterHour(finInMinutes)) {
       throw new CreneauInvalideError('debut and fin must be on a quarter hour');
     }
-    if (finInMinutes - debutInMinutes < MIN_DURATION_IN_MINUTES) {
-      throw new CreneauInvalideError('a creneau must last at least 30 minutes');
+    const duration = finInMinutes - debutInMinutes;
+    if (duration < MIN_DURATION_IN_MINUTES || duration > MAX_DURATION_IN_MINUTES) {
+      throw new CreneauInvalideError('a creneau must last between 30 minutes and 4 hours');
     }
     return new Creneau(debut, fin);
   }
