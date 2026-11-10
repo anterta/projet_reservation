@@ -28,7 +28,7 @@ export function createApp(salleRepository: SalleRepository = new InMemorySalleRe
   app.use(express.json());
 
   const listSalles = new ListSalles(salleRepository);
-  const reserveSalle = new ReserveSalle();
+  const reserveSalle = new ReserveSalle(salleRepository);
 
   app.get('/salles', (_request, response) => {
     const salles = listSalles.execute().map(({ id, nom, capacite }) => ({ id, nom, capacite }));

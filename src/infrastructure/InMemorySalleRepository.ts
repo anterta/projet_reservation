@@ -11,4 +11,8 @@ export class InMemorySalleRepository implements SalleRepository {
   findAll(): Salle[] {
     return [...this.salles];
   }
+
+  findById(id: string): Salle | undefined {
+    return this.salles.find((salle) => salle.id === id);
+  }
 }
