@@ -72,4 +72,17 @@ describe('POST /salles/:id/reservations', () => {
 
     expect(response.status).toBe(201);
   });
+
+  it('returns 422 CRENEAU_INVALIDE when debut is before 08:00', async () => {
+    const response = await postReservation('A', { debut: '07:45', fin: '09:00' });
+
+    expect(response.status).toBe(422);
+    expect(response.body).toEqual({ code: 'CRENEAU_INVALIDE', message: expect.any(String) });
+  });
+
+  it('accepts a debut at 08:00', async () => {
+    const response = await postReservation('A', { debut: '08:00', fin: '09:00' });
+
+    expect(response.status).toBe(201);
+  });
 });
