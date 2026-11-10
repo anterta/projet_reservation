@@ -39,4 +39,11 @@ describe('POST /salles/:id/reservations', () => {
     expect(response.status).toBe(422);
     expect(response.body).toEqual({ code: 'CRENEAU_INVALIDE', message: expect.any(String) });
   });
+
+  it('returns 422 CRENEAU_INVALIDE when fin is not on a quarter hour', async () => {
+    const response = await postReservation('A', { fin: '10:05' });
+
+    expect(response.status).toBe(422);
+    expect(response.body).toEqual({ code: 'CRENEAU_INVALIDE', message: expect.any(String) });
+  });
 });
