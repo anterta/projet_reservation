@@ -36,4 +36,11 @@ describe('GET /salles/:id/planning', () => {
       participants: 3,
     });
   });
+
+  it('returns 400 REQUETE_INVALIDE when the date is missing', async () => {
+    const response = await request(createApp()).get('/salles/A/planning');
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({ code: 'REQUETE_INVALIDE', message: expect.any(String) });
+  });
 });
