@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { Creneau } from '../domaine/Creneau';
 import { Reservation } from '../domaine/Reservation';
 
 export interface ReserveSalleCommand {
@@ -16,8 +17,7 @@ export class ReserveSalle {
       randomUUID(),
       command.salleId,
       command.date,
-      command.debut,
-      command.fin,
+      Creneau.create(command.debut, command.fin),
       command.organisateur,
       command.participants,
     );
