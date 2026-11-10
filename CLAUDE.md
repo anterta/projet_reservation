@@ -48,19 +48,23 @@
 - Retourne HTTP 404 avec le code `SALLE_INCONNUE` pour toute salle inconnue.
 - Respecte les autres statuts et codes d'erreur définis dans les tâches issues des stories.
 
+
 ## Méthode TDD
 
-- Consulte `TACHES.md` pour connaître la tâche demandée, sans anticiper les suivantes.
-- Respecte le pilotage humain du cycle TDD : attends chaque consigne avant de passer à l'étape suivante.
-- Lorsque l'utilisateur demande un test, écris un seul test et aucun code de production.
-- Arrête-toi après avoir écrit le test pour laisser l'utilisateur l'exécuter, vérifier son échec et créer le commit `test:`.
-- Lorsque l'utilisateur demande l'implémentation, écris uniquement le code minimal nécessaire pour faire passer ce test.
-- Arrête-toi ensuite pour laisser l'utilisateur exécuter tous les tests et vérifier leur réussite.
-- Lorsque l'utilisateur demande un nettoyage, refactorise le code sans modifier les tests ni son comportement.
-- Laisse l'utilisateur valider le résultat et créer le commit `feat:`.
-- Ne modifie jamais un test uniquement pour le faire passer.
-- Respecte un seul nouveau test par cycle et deux commits distincts, `test:` puis `feat:`, réalisés par l'utilisateur.
-- Ne crée aucun commit Git sans demande explicite de l'utilisateur.
-- Si l'utilisateur demande de préparer un message de commit, conserve la ligne `Co-Authored-By: Claude`.
-- Ne coche aucune tâche dans `TACHES.md` sans validation explicite de l'utilisateur.
-- Laisse l'utilisateur effectuer `/export`, vérifier les secrets et commiter les sessions dans `sessions/` avec le préfixe `docs:`.
+- Consulte `TACHES.md` avant chaque tâche et traite les tâches dans leur ordre.
+- Applique un cycle TDD complet pour chaque test correspondant à un cas d'acceptation, y compris les branches et les valeurs limites.
+- Écris un seul nouveau test à la fois, sans implémenter le code associé.
+- Lance `npm test` et vérifie que le nouveau test échoue pour la raison attendue.
+- Commite uniquement le test avec un message commençant par `test:`.
+- Écris ensuite uniquement le code minimal nécessaire pour faire passer le test.
+- Relance tous les tests avec `npm test` et vérifie qu'ils passent.
+- Nettoie et simplifie le code de production sans modifier les tests, puis vérifie à nouveau les tests.
+- Ne modifie jamais un test dans le but de le faire passer.
+- Commite le code de production avec un message commençant par `feat:`.
+- Produis exactement deux commits par cycle TDD, dans l'ordre `test:` puis `feat:`.
+- Conserve la ligne `Co-Authored-By: Claude` dans les messages de ces deux commits.
+- Coche une tâche dans `TACHES.md` uniquement lorsque ses tests passent et que son cycle TDD est terminé.
+- Ne commence pas la tâche suivante avant d'avoir terminé le cycle courant.
+- À la fin de chaque session Claude Code, utilise `/export` et enregistre l'export daté dans `sessions/`.
+- Relis chaque export et supprime les clés, mots de passe et jetons avant de le commiter.
+- Commite les exports de session avec un message commençant par `docs:`.
