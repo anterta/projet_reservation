@@ -11,6 +11,10 @@ function toMinutes(heure: string): number {
   return hours * 60 + minutes;
 }
 
+function isOnQuarterHour(minutes: number): boolean {
+  return minutes % 15 === 0;
+}
+
 export class Creneau {
   private constructor(
     readonly debut: string,
@@ -18,8 +22,8 @@ export class Creneau {
   ) {}
 
   static create(debut: string, fin: string): Creneau {
-    if (toMinutes(debut) % 15 !== 0) {
-      throw new CreneauInvalideError('debut must be on a quarter hour');
+    if (!isOnQuarterHour(toMinutes(debut)) || !isOnQuarterHour(toMinutes(fin))) {
+      throw new CreneauInvalideError('debut and fin must be on a quarter hour');
     }
     return new Creneau(debut, fin);
   }
