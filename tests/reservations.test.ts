@@ -138,4 +138,11 @@ describe('POST /salles/:id/reservations', () => {
     expect(response.status).toBe(400);
     expect(response.body).toEqual({ code: 'REQUETE_INVALIDE', message: expect.any(String) });
   });
+
+  it('returns 400 REQUETE_INVALIDE when the body is badly formatted', async () => {
+    const response = await postReservation('A', { debut: '9h' });
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({ code: 'REQUETE_INVALIDE', message: expect.any(String) });
+  });
 });
