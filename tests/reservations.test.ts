@@ -131,4 +131,11 @@ describe('POST /salles/:id/reservations', () => {
     expect(response.status).toBe(404);
     expect(response.body).toEqual({ code: 'SALLE_INCONNUE', message: expect.any(String) });
   });
+
+  it('returns 400 REQUETE_INVALIDE when the body is incomplete', async () => {
+    const response = await postReservation('A', { organisateur: undefined });
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({ code: 'REQUETE_INVALIDE', message: expect.any(String) });
+  });
 });
