@@ -1,4 +1,5 @@
 import express, { NextFunction, Request, Response } from 'express';
+import { ConsultPlanning } from '../application/ConsultPlanning';
 import { ListSalles } from '../application/ListSalles';
 import { ReserveSalle } from '../application/ReserveSalle';
 import { DomainError } from '../domaine/DomainError';
@@ -38,6 +39,7 @@ export function createApp(
 
   const listSalles = new ListSalles(salleRepository);
   const reserveSalle = new ReserveSalle(salleRepository, planningRepository);
+  const consultPlanning = new ConsultPlanning(salleRepository, planningRepository);
 
   app.get('/salles', (_request, response) => {
     const salles = listSalles.execute().map(({ id, nom, capacite }) => ({ id, nom, capacite }));
@@ -52,8 +54,9 @@ export function createApp(
     response.status(201).json(toReservationResponse(reservation));
   });
 
-  app.get('/salles/:id/planning', (_request, response) => {
-    response.status(200).json([]);
+  app.get('/salles/:id/planning', (request, response) => {
+    const reservations = consultPlanning.execute(request.params.id, String(request.query.date));
+    response.status(200).json(reservations.map(toReservationResponse));
   });
 
   app.use((error: unknown, _request: Request, response: Response, next: NextFunction) => {

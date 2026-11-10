@@ -26,7 +26,9 @@ export class PlanningSalle {
   }
 
   getReservations(): Reservation[] {
-    return [...this.reservations];
+    return [...this.reservations].sort((a, b) =>
+      a.creneau.debut.localeCompare(b.creneau.debut),
+    );
   }
 
   add(reservation: Reservation): void {
