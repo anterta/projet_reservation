@@ -1,0 +1,2101 @@
+
+> <ide_opened_file>The user opened the file
+  e:\Users\pocho\Documents\projet\CLAUDE.md in the IDE. This may or may not be
+  related to the current task.</ide_opened_file>
+
+> Regarde TACHES.md et code un test unique pour valider la demande.
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; cat TACHES.md; echo ----; cat
+      CLAUDE.md; echo ----; ls -la)
+  ⎿  (No output)
+  ⎿  6 skills available
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; cat spec-reservation-salles.md; git
+      log --oneline | head; node -v; npm -v)
+  ⎿  (No output)
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; mkdir -p tests
+      cat > package.json <<'EOF'…)
+  ⎿  Created .gitignore (+1 -0)
+      1 +node_modules/                                                   
+  ⎿  Created package.json (+25 -0)
+       1 +{                                                              
+       2 +  "name": "reservation-salles",                                
+       3 +  "version": "1.0.0",                                          
+       4 +  "private": true,                                             
+       5 +  "type": "module",                                            
+       6 +  "engines": {                                                 
+       7 +    "node": ">=20"                                             
+       8 +  },                                                           
+       9 +  "scripts": {                                                 
+      10 +    "test": "vitest run",                                      
+      11 +    "start": "tsx src/infrastructure/serveur.ts"               
+      12 +  },                                                           
+      13 +  "dependencies": {                                            
+      14 +    "express": "4.21.2"                                        
+      15 +  },                                                           
+      16 +  "devDependencies": {                                         
+      17 +    "@types/express": "4.17.21",                               
+      18 +    "@types/node": "20.17.6",                                  
+      19 +    "@types/supertest": "6.0.2",                               
+      20 +    "supertest": "7.0.0",                                      
+      21 +    "tsx": "4.19.2",                                           
+      22 +    "typescript": "5.6.3",                                     
+      23 +    "vitest": "2.1.8"                                          
+      24 +  }                                                            
+      25 +}                                                              
+  ⎿  Created tests\salles.test.ts (+16 -0)
+       1 +import { describe, it, expect } from 'vitest';                 
+       2 +import request from 'supertest';                               
+       3 +import { creerApp } from '../src/infrastructure/app';          
+       4 +                                                               
+       5 +describe('GET /salles', () => {                                
+       6 +  it('renvoie 200 et les 3 salles présentes au démarrage', asyn
+         +c () => {                                                      
+       7 +    const reponse = await request(creerApp()).get('/salles');  
+       8 +                                                               
+       9 +    expect(reponse.status).toBe(200);                          
+      10 +    expect(reponse.body).toEqual([                             
+      11 +      { id: 'A', nom: 'Atelier', capacite: 4 },                
+      12 +      { id: 'B', nom: 'Bureau', capacite: 8 },                 
+      13 +      { id: 'C', nom: 'Conférence', capacite: 20 },            
+      14 +    ]);                                                        
+      15 +  });                                                          
+      16 +});                                                            
+  ⎿  Created tsconfig.json (+12 -0)
+       1 +{                                                              
+       2 +  "compilerOptions": {                                         
+       3 +    "target": "ES2022",                                        
+       4 +    "module": "ESNext",                                        
+       5 +    "moduleResolution": "Bundler",                             
+       6 +    "strict": true,                                            
+       7 +    "esModuleInterop": true,                                   
+       8 +    "skipLibCheck": true,                                      
+       9 +    "noEmit": true                                             
+      10 +  },                                                           
+      11 +  "include": ["src", "tests"]                                  
+      12 +}                                                              
+
+● J'ai écrit un seul test pour la Story 1, et aucun code de production. Je ne
+  l'ai pas lancé : c'est à toi de vérifier qu'il échoue.
+
+  Le test, dans tests/salles.test.ts : il appelle GET /salles et vérifie la
+  réponse 200 et la liste exacte des 3 salles A, B et C, avec id, nom et
+  capacite.
+
+  const reponse = await request(creerApp()).get('/salles');
+  expect(reponse.status).toBe(200);
+  expect(reponse.body).toEqual([
+    { id: 'A', nom: 'Atelier', capacite: 4 },
+    { id: 'B', nom: 'Bureau', capacite: 8 },
+    { id: 'C', nom: 'Conférence', capacite: 20 },
+  ]);
+
+  Il importe creerApp depuis src/infrastructure/app, qui n'existe pas encore.
+  L'échec attendu est donc une erreur d'import.
+
+  Configuration ajoutée, sans quoi le test ne peut pas tourner :
+  - package.json : Express, Vitest, Supertest, TypeScript et tsx, avec les
+    scripts npm test (vitest run) et npm start.
+  - tsconfig.json et .gitignore (pour exclure node_modules/).
+
+  Problème avant de lancer le test : ta machine a Node v14.18.3 et npm 6.
+  CLAUDE.md exige Node 20 ou plus, et Vitest 2 ne fonctionne pas sous Node 14.
+  Installe Node 20 ou plus, puis lance npm install et npm test pour voir le test
+  échouer et faire le commit test:.
+
+> <ide_selection>The user selected the lines 102 to 116 from
+  e:\Users\pocho\Documents\projet\spec-reservation-salles.md:
+  Story 1 — Lister les salles
+
+  En tant qu'employé, je veux voir la liste des salles, afin de choisir où
+  réserver.
+
+  Critères d'acceptation :
+
+  - Au démarrage, l'application contient 3 salles :
+
+    | id | nom | capacité |
+    | --- | --- | --- |
+    | A | Atelier | 4 |
+    | B | Bureau | 8 |
+    | C | Conférence | 20 |
+  - GET /salles renvoie 200 et la liste [{ "id", "nom", "capacite" }].
+
+  This may or may not be related to the current task.</ide_selection>
+
+> Maintenant écris le code minimal permettant au test de passer.
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; mkdir -p src/infrastructure
+      cat > src/infrastructure/app.ts <<'EOF'…)
+  ⎿  Created src\infrastructure\app.ts (+15 -0)
+       1 +import express from 'express';                                 
+       2 +                                                               
+       3 +export function creerApp() {                                   
+       4 +  const app = express();                                       
+       5 +                                                               
+       6 +  app.get('/salles', (_requete, reponse) => {                  
+       7 +    reponse.status(200).json([                                 
+       8 +      { id: 'A', nom: 'Atelier', capacite: 4 },                
+       9 +      { id: 'B', nom: 'Bureau', capacite: 8 },                 
+      10 +      { id: 'C', nom: 'Conférence', capacite: 20 },            
+      11 +    ]);                                                        
+      12 +  });                                                          
+      13 +                                                               
+      14 +  return app;                                                  
+      15 +}                                                              
+
+● J'ai écrit le code minimal dans src/infrastructure/app.ts. Je n'ai pas lancé
+  les tests, comme le veut CLAUDE.md : c'est à toi de le faire.
+
+  import express from 'express';
+
+  export function creerApp() {
+    const app = express();
+    app.get('/salles', (_requete, reponse) => {
+      reponse.status(200).json([
+        { id: 'A', nom: 'Atelier', capacite: 4 },
+        { id: 'B', nom: 'Bureau', capacite: 8 },
+        { id: 'C', nom: 'Conférence', capacite: 20 },
+      ]);
+    });
+    return app;
+  }
+
+  La route renvoie les 3 salles écrites en dur, ce qui suffit à faire passer le
+  test. Elle ne respecte pas encore l'architecture DDD. L'étape de nettoyage
+  pourra introduire Salle dans src/domaine/, l'interface SalleRepository, son
+  implémentation en mémoire et un cas d'usage dans src/application/, sans
+  toucher au test.
+
+  Avant de lancer npm install puis npm test, il faut toujours Node 20 ou plus :
+  ta machine a Node v14.18.3, sous lequel Vitest ne fonctionne pas.
+
+  Pour l'instant, npm start ne marche pas encore : il pointe vers
+  src/infrastructure/serveur.ts, qui n'existe pas, et aucun test ne le demande.
+  README.md reste aussi à écrire.
+
+> <ide_selection>The user selected the lines 25 to 26 from
+  e:\Users\pocho\Documents\projet\spec-reservation-salles.md:
+
+  6. Demande un nettoyage du code, sans modifier les tests.
+
+  This may or may not be related to the current task.</ide_selection>
+
+> Refactorise le code si nécessaire, sans modifier les tests ni le
+  comportement.
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; mkdir -p src/domaine
+      src/application
+      cat > src/domaine/Salle.ts <<'EOF'…)
+  ⎿  Created src\application\ListerSalles.ts (+10 -0)
+       1 +import { Salle } from '../domaine/Salle';                      
+       2 +import { SalleRepository } from '../domaine/SalleRepository';  
+       3 +                                                               
+       4 +export class ListerSalles {                                    
+       5 +  constructor(private readonly salleRepository: SalleRepository
+         +) {}                                                           
+       6 +                                                               
+       7 +  executer(): Salle[] {                                        
+       8 +    return this.salleRepository.toutes();                      
+       9 +  }                                                            
+      10 +}                                                              
+  ⎿  Created src\domaine\Salle.ts (+7 -0)
+      1 +export class Salle {                                            
+      2 +  constructor(                                                  
+      3 +    readonly id: string,                                        
+      4 +    readonly nom: string,                                       
+      5 +    readonly capacite: number,                                  
+      6 +  ) {}                                                          
+      7 +}                                                               
+  ⎿  Created src\domaine\SalleRepository.ts (+5 -0)
+      1 +import { Salle } from './Salle';                                
+      2 +                                                                
+      3 +export interface SalleRepository {                              
+      4 +  toutes(): Salle[];                                            
+      5 +}                                                               
+  ⎿  Created src\infrastructure\SalleRepositoryEnMemoire.ts (+14 -0)
+       1 +import { Salle } from '../domaine/Salle';                      
+       2 +import { SalleRepository } from '../domaine/SalleRepository';  
+       3 +                                                               
+       4 +export class SalleRepositoryEnMemoire implements SalleRepositor
+         +y {                                                            
+       5 +  private readonly salles: Salle[] = [                         
+       6 +    new Salle('A', 'Atelier', 4),                              
+       7 +    new Salle('B', 'Bureau', 8),                               
+       8 +    new Salle('C', 'Conférence', 20),                          
+       9 +  ];                                                           
+      10 +                                                               
+      11 +  toutes(): Salle[] {                                          
+      12 +    return [...this.salles];                                   
+      13 +  }                                                            
+      14 +}                                                              
+  ⎿  Updated src\infrastructure\app.ts (+7 -6)
+       1  import express from 'express';
+       2 +import { ListerSalles } from '../application/ListerSalles';    
+       3 +import { SalleRepository } from '../domaine/SalleRepository';  
+       4 +import { SalleRepositoryEnMemoire } from './SalleRepositoryEnMe
+         +moire';                                                        
+       5  
+       3 -export function creerApp() {                                   
+       6 +export function creerApp(salleRepository: SalleRepository = new
+         + SalleRepositoryEnMemoire()) {                                 
+       7    const app = express();
+       8 +  const listerSalles = new ListerSalles(salleRepository);      
+       9  
+      10    app.get('/salles', (_requete, reponse) => {
+       7 -    reponse.status(200).json([                                 
+       8 -      { id: 'A', nom: 'Atelier', capacite: 4 },                
+       9 -      { id: 'B', nom: 'Bureau', capacite: 8 },                 
+      10 -      { id: 'C', nom: 'Conférence', capacite: 20 },            
+      11 -    ]);                                                        
+      11 +    const salles = listerSalles.executer().map(({ id, nom, capa
+         +cite }) => ({ id, nom, capacite }));                           
+      12 +    reponse.status(200).json(salles);                          
+      13    });
+      14  
+      15    return app;
+
+● J'ai réorganisé le code selon l'architecture DDD, sans modifier le test ni la
+  réponse de GET /salles. Je n'ai pas lancé les tests : c'est à toi de le faire
+  avant le commit feat:.
+
+  Couche: Domaine
+  Fichier: src/domaine/Salle.ts
+  Contenu: Salle, avec id, nom et capacite
+  ────────────────────────────────────────
+  Couche: Domaine
+  Fichier: src/domaine/SalleRepository.ts
+  Contenu: L'interface SalleRepository, avec la méthode toutes()
+  ────────────────────────────────────────
+  Couche: Application
+  Fichier: src/application/ListerSalles.ts
+  Contenu: Le cas d'usage qui lit les salles dans le repository
+  ────────────────────────────────────────
+  Couche: Infrastructure
+  Fichier: src/infrastructure/SalleRepositoryEnMemoire.ts
+  Contenu: Le repository en mémoire, qui contient les 3 salles de départ
+  ────────────────────────────────────────
+  Couche: Infrastructure
+  Fichier: src/infrastructure/app.ts
+  Contenu: La route GET /salles, qui appelle le cas d'usage et renvoie { id,
+  nom,
+    capacite }
+
+  - Signature de creerApp : elle accepte maintenant un SalleRepository en
+    paramètre facultatif, avec le repository en mémoire par défaut. Le test
+    l'appelle sans paramètre, il n'a donc pas besoin de changer.
+  - Imports du domaine : la commande de vérification de la spec, grep -rnE "from
+    ['\"]" src/domaine, ne trouve que ./Salle. Le domaine n'importe donc rien
+    d'extérieur à src/domaine.
+
+  Deux points restent ouverts, et je ne les ai pas traités pour ne pas ajouter
+  de comportement pendant un nettoyage :
+  - npm start ne marche pas : il pointe vers src/infrastructure/serveur.ts, qui
+    n'existe pas.
+  - README.md manque : il doit documenter npm install, npm test et npm start.
+
+  Il faut toujours Node 20 ou plus pour lancer les tests : ta machine a Node
+  v14.18.3.
+
+> <ide_opened_file>The user opened the file
+  e:\Users\pocho\Documents\projet\CLAUDE.md in the IDE. This may or may not be
+  related to the current task.</ide_opened_file>
+
+> à part pour le vocabulaire, garde le code en anglais.
+  Mets à jour le code et le CLAUDE.md en conséquence.
+
+  Read 1 file (ctrl+o to expand)
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; rm src/application/ListerSalles.ts
+      src/infrastructure/SalleRepositoryEnMemoire.ts
+      cat > src/domaine/SalleRepository.ts <<'…)
+  ⎿  Created src\application\ListSalles.ts (+10 -0)
+       1 +import { Salle } from '../domaine/Salle';                      
+       2 +import { SalleRepository } from '../domaine/SalleRepository';  
+       3 +                                                               
+       4 +export class ListSalles {                                      
+       5 +  constructor(private readonly salleRepository: SalleRepository
+         +) {}                                                           
+       6 +                                                               
+       7 +  execute(): Salle[] {                                         
+       8 +    return this.salleRepository.findAll();                     
+       9 +  }                                                            
+      10 +}                                                              
+  ⎿  Deleted src\application\ListerSalles.ts (+0 -10)
+       1 -import { Salle } from '../domaine/Salle';                      
+       2 -import { SalleRepository } from '../domaine/SalleRepository';  
+       3 -                                                               
+       4 -export class ListerSalles {                                    
+       5 -  constructor(private readonly salleRepository: SalleRepository
+         -) {}                                                           
+       6 -                                                               
+       7 -  executer(): Salle[] {                                        
+       8 -    return this.salleRepository.toutes();                      
+       9 -  }                                                            
+      10 -}                                                              
+  ⎿  Updated src\domaine\SalleRepository.ts (+1 -1)
+      1  import { Salle } from './Salle';
+      2  
+      3  export interface SalleRepository {
+      4 -  toutes(): Salle[];                                            
+      4 +  findAll(): Salle[];                                           
+      5  }
+  ⎿  Created src\infrastructure\InMemorySalleRepository.ts (+14 -0)
+       1 +import { Salle } from '../domaine/Salle';                      
+       2 +import { SalleRepository } from '../domaine/SalleRepository';  
+       3 +                                                               
+       4 +export class InMemorySalleRepository implements SalleRepository
+         + {                                                             
+       5 +  private readonly salles: Salle[] = [                         
+       6 +    new Salle('A', 'Atelier', 4),                              
+       7 +    new Salle('B', 'Bureau', 8),                               
+       8 +    new Salle('C', 'Conférence', 20),                          
+       9 +  ];                                                           
+      10 +                                                               
+      11 +  findAll(): Salle[] {                                         
+      12 +    return [...this.salles];                                   
+      13 +  }                                                            
+      14 +}                                                              
+  ⎿  Deleted src\infrastructure\SalleRepositoryEnMemoire.ts (+0 -14)
+       1 -import { Salle } from '../domaine/Salle';                      
+       2 -import { SalleRepository } from '../domaine/SalleRepository';  
+       3 -                                                               
+       4 -export class SalleRepositoryEnMemoire implements SalleRepositor
+         -y {                                                            
+       5 -  private readonly salles: Salle[] = [                         
+       6 -    new Salle('A', 'Atelier', 4),                              
+       7 -    new Salle('B', 'Bureau', 8),                               
+       8 -    new Salle('C', 'Conférence', 20),                          
+       9 -  ];                                                           
+      10 -                                                               
+      11 -  toutes(): Salle[] {                                          
+      12 -    return [...this.salles];                                   
+      13 -  }                                                            
+      14 -}                                                              
+  ⎿  … 2 more files changed
+
+● Update(CLAUDE.md)
+  ⎿  Added 3 lines
+      36  - Désigne par `Planning` la liste des réservations d'une salle 
+          pour une date.
+      37  - Désigne par `Organisateur` la personne qui réserve, identifié
+          e par son e-mail.
+      38  - N'introduis aucun synonyme de ces notions métier dans le code
+          , les tests ou l'API.
+      39 +- Écris le code et les tests en anglais : identifiants, noms de
+         + fichiers, méthodes, variables et libellés de tests.           
+      40 +- Conserve en français les termes métier et leurs attributs (`i
+         +d`, `nom`, `capacite`, `debut`, `fin`, `date`, `organisateur`, 
+         +`participants`), par exemple `InMemorySalleRepository.findAll()
+         +`.                                                             
+      41 +- Conserve en français les noms de dossiers `domaine`, `applica
+         +tion` et `infrastructure`, les routes, les champs JSON et les c
+         +odes d'erreur imposés par la spécification.                    
+      42  
+      43  ## Format de l'API
+      44  
+
+● Le code est maintenant en anglais, sauf le vocabulaire métier, et CLAUDE.md
+  contient la nouvelle règle. Je n'ai pas lancé les tests.
+
+  Renommages
+
+  ┌──────────────────────────┬───────────────────────────────────────────────┐
+  │          Avant           │                     Après                     │
+  ├──────────────────────────┼───────────────────────────────────────────────┤
+  │ creerApp                 │ createApp                                     │
+  ├──────────────────────────┼───────────────────────────────────────────────┤
+  │ ListerSalles.executer()  │ ListSalles.execute() dans                     │
+  │                          │ src/application/ListSalles.ts                 │
+  ├──────────────────────────┼───────────────────────────────────────────────┤
+  │ SalleRepositoryEnMemoire │ InMemorySalleRepository dans                  │
+  │                          │ src/infrastructure/InMemorySalleRepository.ts │
+  ├──────────────────────────┼───────────────────────────────────────────────┤
+  │ SalleRepository.toutes() │ SalleRepository.findAll()                     │
+  ├──────────────────────────┼───────────────────────────────────────────────┤
+  │ _requete, reponse        │ _request, response                            │
+  └──────────────────────────┴───────────────────────────────────────────────┘
+
+  Les anciens fichiers ListerSalles.ts et SalleRepositoryEnMemoire.ts sont
+  supprimés.
+
+  Restent en français
+  - les termes métier Salle, SalleRepository et leurs attributs nom et capacite
+    ;
+  - les dossiers src/domaine/, src/application/ et src/infrastructure/ ;
+  - la route /salles et les champs JSON, qui sont imposés par la spec.
+
+  Le test a été modifié. Pour suivre ta consigne, tests/salles.test.ts importe
+  maintenant createApp, et son libellé est en anglais. Ses vérifications n'ont
+  pas changé : statut 200 et les mêmes 3 salles.
+
+  Dans CLAUDE.md, rubrique « Vocabulaire », j'ai ajouté trois règles :
+  - écrire le code et les tests en anglais : identifiants, fichiers, méthodes,
+    variables et libellés de tests ;
+  - garder en français les termes métier et leurs attributs, par exemple nom,
+    capacite, debut et organisateur ;
+  - garder en français les noms de dossiers, les routes, les champs JSON et les
+    codes d'erreur imposés par la spec.
+
+  Il faut toujours Node 20 ou plus pour lancer npm test : ta machine a Node
+  v14.18.3.
+
+> <ide_opened_file>The user opened the file
+  e:\Users\pocho\Documents\projet\TACHES.md in the IDE. This may or may not be
+  related to the current task.</ide_opened_file>
+
+> Suis le cycle de TDD détaillé dans CLAUDE.md en commençant par la Story 2
+  dans TACHES.md
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; cat TACHES.md; echo ----; cat
+      CLAUDE.md; echo ----; git log --oneline | head; git status --short; ls
+      tests src/*)
+  ⎿  (No output)
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; node -v; ls node_modules | head -3;
+      npm test 2>&1 | tail -15; git diff --stat)
+  ⎿  (No output)
+
+● Bash(which -a node; ls "$LOCALAPPDATA/nvm" "$APPDATA/nvm" "/c/Program
+      Files/nodejs" 2>/dev/null; command -v nvm fnm volta 2>/dev/null; npx
+      --version)
+  ⎿  (No output)
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; cat > tests/reservations.test.ts
+      <<'EOF'
+      import { describe, it, expect } from 'vitest';…)
+  ⎿  Created tests\reservations.test.ts (+21 -0)
+       1 +import { describe, it, expect } from 'vitest';                 
+       2 +import request from 'supertest';                               
+       3 +import { createApp } from '../src/infrastructure/app';         
+       4 +                                                               
+       5 +describe('POST /salles/:id/reservations', () => {              
+       6 +  it('returns 201 and the reservation with its id for a valid r
+         +equest', async () => {                                         
+       7 +    const body = {                                             
+       8 +      date: '2026-12-01',                                      
+       9 +      debut: '09:00',                                          
+      10 +      fin: '10:00',                                            
+      11 +      organisateur: 'marie@exemple.fr',                        
+      12 +      participants: 3,                                         
+      13 +    };                                                         
+      14 +                                                               
+      15 +    const response = await request(createApp()).post('/salles/A
+         +/reservations').send(body);                                    
+      16 +                                                               
+      17 +    expect(response.status).toBe(201);                         
+      18 +    expect(response.body).toMatchObject(body);                 
+      19 +    expect(response.body.id).toEqual(expect.any(String));      
+      20 +  });                                                          
+      21 +});                                                            
+● User answered Claude's questions:
+  ⎿  · I've written the first Story 2 test (valid request → 201 with the
+     reservation and its id), but I can't run it: the PATH only has Node
+     v14.18.3, and Vitest 2 crashes on it (`SyntaxError: '??='`). The CLAUDE.md
+     cycle requires seeing the test fail before the `test:` commit. How should I
+     proceed? → use "nvs use 22"
+
+● PowerShell(nvs use 22; node -v; (Get-Command node).Source)
+  ⎿  PATH -= C:\Program Files\nodejs
+     PATH -= C:\Program Files\nodejs
+     PATH -= C:\Program Files\nodejs
+     … +3 lines (ctrl+o to expand)
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; export
+      PATH="$LOCALAPPDATA/nvs/node/22.14.0/x64:$PATH"; node -v; npm test 2>&1 |
+      tail -30)
+  ⎿  (No output)
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; export PATH="$(cygpath -u
+      "$LOCALAPPDATA")/nvs/node/22.14.0/x64:$PATH"; node -v; npm -v; npm test
+      2>&1 | tail -30)
+  ⎿  (No output)
+
+● The test fails for the expected reason: the route does not exist yet, so the
+  API returns 404. I'll commit only the test file.
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; git add tests/reservations.test.ts
+      && git commit -q -m "test: POST /salles/:id/reservations returns 201 for a
+      valid reques…)
+  ⎿  (No output)
+
+● Now the minimal production code: a Reservation in the domain, a use case that
+  generates the id, and the route.
+
+● Bash(cd "e:/Users/pocho/Documents/projet"
+      cat > src/domaine/Reservation.ts <<'EOF'…)
+  ⎿  Created src\application\ReserveSalle.ts (+25 -0)
+       1 +import { randomUUID } from 'node:crypto';                      
+       2 +import { Reservation } from '../domaine/Reservation';          
+       3 +                                                               
+       4 +export interface ReserveSalleCommand {                         
+       5 +  salleId: string;                                             
+       6 +  date: string;                                                
+       7 +  debut: string;                                               
+       8 +  fin: string;                                                 
+       9 +  organisateur: string;                                        
+      10 +  participants: number;                                        
+      11 +}                                                              
+      12 +                                                               
+      13 +export class ReserveSalle {                                    
+      14 +  execute(command: ReserveSalleCommand): Reservation {         
+      15 +    return new Reservation(                                    
+      16 +      randomUUID(),                                            
+      17 +      command.salleId,                                         
+      18 +      command.date,                                            
+      19 +      command.debut,                                           
+      20 +      command.fin,                                             
+      21 +      command.organisateur,                                    
+      22 +      command.participants,                                    
+      23 +    );                                                         
+      24 +  }                                                            
+      25 +}                                                              
+  ⎿  Created src\domaine\Reservation.ts (+11 -0)
+       1 +export class Reservation {                                     
+       2 +  constructor(                                                 
+       3 +    readonly id: string,                                       
+       4 +    readonly salleId: string,                                  
+       5 +    readonly date: string,                                     
+       6 +    readonly debut: string,                                    
+       7 +    readonly fin: string,                                      
+       8 +    readonly organisateur: string,                             
+       9 +    readonly participants: number,                             
+      10 +  ) {}                                                         
+      11 +}                                                              
+  ⎿  Updated src\infrastructure\app.ts (+17 -0)
+       1  import express from 'express';
+       2  import { ListSalles } from '../application/ListSalles';
+       3 +import { ReserveSalle } from '../application/ReserveSalle';    
+       4  import { SalleRepository } from '../domaine/SalleRepository';
+       5  import { InMemorySalleRepository } from './InMemorySalleReposit
+          ory';
+       6  
+       7  export function createApp(salleRepository: SalleRepository = ne
+          w InMemorySalleRepository()) {
+       8    const app = express();
+       9 +  app.use(express.json());                                     
+      10 +                                                               
+      11    const listSalles = new ListSalles(salleRepository);
+      12 +  const reserveSalle = new ReserveSalle();                     
+      13  
+      14    app.get('/salles', (_request, response) => {
+      15      const salles = listSalles.execute().map(({ id, nom, capacit
+          e }) => ({ id, nom, capacite }));
+      16      response.status(200).json(salles);
+      17    });
+      18  
+      19 +  app.post('/salles/:id/reservations', (request, response) => {
+      20 +    const { date, debut, fin, organisateur, participants } = re
+         +quest.body;                                                    
+      21 +    const reservation = reserveSalle.execute({                 
+      22 +      salleId: request.params.id,                              
+      23 +      date,                                                    
+      24 +      debut,                                                   
+      25 +      fin,                                                     
+      26 +      organisateur,                                            
+      27 +      participants,                                            
+      28 +    });                                                        
+      29 +    response.status(201).json(reservation);                    
+      30 +  });                                                          
+      31 +                                                               
+      32    return app;
+      33  }
+
+● All tests pass and the TypeScript check succeeds. The code is already small
+  and in the right layers, so the cleanup changes nothing. I'll commit it.
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; grep -rnE "from ['\"]" src/domaine;
+      git add src && git commit -q -m "feat: reserve a salle with POST
+      /salles/:id/reservati…)
+  ⎿  (No output)
+
+● I finished the first TDD cycle of Story 2: a valid request returns 201 with
+  the reservation and its id. Both commits are made.
+
+  ┌──────────┬────────────────────────────┬─────────────────────────────────┐
+  │  Commit  │          Content           │              Check              │
+  ├──────────┼────────────────────────────┼─────────────────────────────────┤
+  │ 79f64bd  │                            │ Fails as expected: the route    │
+  │ test:    │ tests/reservations.test.ts │ doesn't exist yet, so the API   │
+  │          │                            │ returns 404 instead of 201      │
+  ├──────────┼────────────────────────────┼─────────────────────────────────┤
+  │ d73590f  │ The production code below  │ All 2 tests pass, and the       │
+  │ feat:    │                            │ TypeScript check passes         │
+  └──────────┴────────────────────────────┴─────────────────────────────────┘
+
+  The production code:
+  - Domain: src/domaine/Reservation.ts defines Reservation.
+  - Application: src/application/ReserveSalle.ts is the use case. It generates
+    the id with randomUUID().
+  - Infrastructure: src/infrastructure/app.ts adds the POST
+    /salles/:id/reservations route.
+
+  I didn't refactor anything: the code was already minimal and each part was in
+  its layer. Both commit messages carry the Co-Authored-By: Claude line.
+
+  Things to know:
+  - Running tests: I prefix each command with the Node 22 path from nvs, because
+    nvs use doesn't carry over between my commands. On your side, a plain npm
+    test still needs nvs use 22 first.
+  - The response has an extra salleId field that the spec doesn't define. The
+    test doesn't check for its absence.
+  - Your changes to CLAUDE.md and TACHES.md aren't committed. I left them out of
+    my commits.
+  - Nothing to tick in TACHES.md: it has no checkboxes yet, so I couldn't mark
+    this task as done.
+
+  I stopped after this one cycle so you can check the format. Next is the first
+  refused case: a start time not on a quarter hour returns 422 with code
+  CRENEAU_INVALIDE. Should I go through the rest of Story 2 in one go, or keep
+  stopping after each cycle?
+
+> <ide_opened_file>The user opened the file
+  e:\Users\pocho\Documents\projet\spec-reservation-salles.md in the IDE. This
+  may or may not be related to the current task.</ide_opened_file>
+
+> continu to cycle in each Story until all requirement are completed before
+  start the next one
+
+● User answered Claude's questions:
+  ⎿  · Some Story 2 tests check that a boundary value is accepted: 30 min, 4 h,
+     end at 20:00, participants = capacity. Each of these would already pass at
+     its `test:` commit, because the code accepts everything until the matching
+     rejection rule exists, and once that rule exists it accepts the boundary
+     too. The spec checks that `npm test` fails on every `test:` commit. How
+     should I handle these boundary tests? → your test was 'returns 201 and the
+     reservation with its id for a valid request', the second have to return
+     422, so without code it's shoudln't pass
+
+● I'll run the test cycles back to back, finishing Story 2's 404 and 400 cases
+  before moving on to Stories 3 and 4. The boundary values each get their own
+  test, committed alongside their rejection test.
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; cat > tests/reservations.test.ts
+      <<'EOF'
+      import { describe, it, expect } from 'vitest';…)
+  ⎿  Updated tests\reservations.test.ts (+21 -0)
+       2  import request from 'supertest';
+       3  import { createApp } from '../src/infrastructure/app';
+       4  
+       5 +const validBody = {                                            
+       6 +  date: '2026-12-01',                                          
+       7 +  debut: '09:00',                                              
+       8 +  fin: '10:00',                                                
+       9 +  organisateur: 'marie@exemple.fr',                            
+      10 +  participants: 3,                                             
+      11 +};                                                             
+      12 +                                                               
+      13 +function postReservation(salleId: string, overrides: Record<str
+         +ing, unknown> = {}) {                                          
+      14 +  return request(createApp())                                  
+      15 +    .post(`/salles/${salleId}/reservations`)                   
+      16 +    .send({ ...validBody, ...overrides });                     
+      17 +}                                                              
+      18 +                                                               
+      19  describe('POST /salles/:id/reservations', () => {
+      20    it('returns 201 and the reservation with its id for a valid r
+          equest', async () => {
+      21      const body = {
+     ...
+      32      expect(response.body).toMatchObject(body);
+      33      expect(response.body.id).toEqual(expect.any(String));
+      34    });
+      35 +                                                               
+      36 +  it('returns 422 CRENEAU_INVALIDE when debut is not on a quart
+         +er hour', async () => {                                        
+      37 +    const response = await postReservation('A', { debut: '09:10
+         +' });                                                          
+      38 +                                                               
+      39 +    expect(response.status).toBe(422);                         
+      40 +    expect(response.body).toEqual({ code: 'CRENEAU_INVALIDE', m
+         +essage: expect.any(String) });                                 
+      41 +  });                                                          
+      42  });
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; git add tests && git commit -q -m
+      "test: reject a debut that is not on a quarter hour…)
+  ⎿  Updated src\application\ReserveSalle.ts (+2 -2)
+      1  import { randomUUID } from 'node:crypto';
+      2 +import { Creneau } from '../domaine/Creneau';                   
+      3  import { Reservation } from '../domaine/Reservation';
+      4  
+      5  export interface ReserveSalleCommand {
+     ...
+      17        randomUUID(),
+      18        command.salleId,
+      19        command.date,
+      19 -      command.debut,                                           
+      20 -      command.fin,                                             
+      20 +      Creneau.create(command.debut, command.fin),              
+      21        command.organisateur,
+      22        command.participants,
+      23      );
+  ⎿  Created src\domaine\Creneau.ts (+26 -0)
+       1 +import { DomainError } from './DomainError';                   
+       2 +                                                               
+       3 +export class CreneauInvalideError extends DomainError {        
+       4 +  constructor(message: string) {                               
+       5 +    super('CRENEAU_INVALIDE', message);                        
+       6 +  }                                                            
+       7 +}                                                              
+       8 +                                                               
+       9 +function toMinutes(heure: string): number {                    
+      10 +  const [hours, minutes] = heure.split(':').map(Number);       
+      11 +  return hours * 60 + minutes;                                 
+      12 +}                                                              
+      13 +                                                               
+      14 +export class Creneau {                                         
+      15 +  private constructor(                                         
+      16 +    readonly debut: string,                                    
+      17 +    readonly fin: string,                                      
+      18 +  ) {}                                                         
+      19 +                                                               
+      20 +  static create(debut: string, fin: string): Creneau {         
+      21 +    if (toMinutes(debut) % 15 !== 0) {                         
+      22 +      throw new CreneauInvalideError('debut must be on a quarte
+         +r hour');                                                      
+      23 +    }                                                          
+      24 +    return new Creneau(debut, fin);                            
+      25 +  }                                                            
+      26 +}                                                              
+  ⎿  Created src\domaine\DomainError.ts (+8 -0)
+      1 +export class DomainError extends Error {                        
+      2 +  constructor(                                                  
+      3 +    readonly code: string,                                      
+      4 +    message: string,                                            
+      5 +  ) {                                                           
+      6 +    super(message);                                             
+      7 +  }                                                             
+      8 +}                                                               
+  ⎿  Updated src\domaine\Reservation.ts (+3 -2)
+       1 +import { Creneau } from './Creneau';                           
+       2 +                                                               
+       3  export class Reservation {
+       4    constructor(
+       5      readonly id: string,
+       6      readonly salleId: string,
+       7      readonly date: string,
+       6 -    readonly debut: string,                                    
+       7 -    readonly fin: string,                                      
+       8 +    readonly creneau: Creneau,                                 
+       9      readonly organisateur: string,
+      10      readonly participants: number,
+      11    ) {}
+  ⎿  Updated src\infrastructure\app.ts (+28 -2)
+       1 -import express from 'express';                                 
+       1 +import express, { NextFunction, Request, Response } from 'expre
+         +ss';                                                           
+       2  import { ListSalles } from '../application/ListSalles';
+       3  import { ReserveSalle } from '../application/ReserveSalle';
+       4 +import { DomainError } from '../domaine/DomainError';          
+       5 +import { Reservation } from '../domaine/Reservation';          
+       6  import { SalleRepository } from '../domaine/SalleRepository';
+       7  import { InMemorySalleRepository } from './InMemorySalleReposit
+          ory';
+       8  
+       9 +const statusByCode: Record<string, number> = {                 
+      10 +  CRENEAU_INVALIDE: 422,                                       
+      11 +};                                                             
+      12 +                                                               
+      13 +function toReservationResponse(reservation: Reservation) {     
+      14 +  return {                                                     
+      15 +    id: reservation.id,                                        
+      16 +    salleId: reservation.salleId,                              
+      17 +    date: reservation.date,                                    
+      18 +    debut: reservation.creneau.debut,                          
+      19 +    fin: reservation.creneau.fin,                              
+      20 +    organisateur: reservation.organisateur,                    
+      21 +    participants: reservation.participants,                    
+      22 +  };                                                           
+      23 +}                                                              
+      24 +                                                               
+      25  export function createApp(salleRepository: SalleRepository = ne
+          w InMemorySalleRepository()) {
+      26    const app = express();
+      27    app.use(express.json());
+     ...
+      44        organisateur,
+      45        participants,
+      46      });
+      29 -    response.status(201).json(reservation);                    
+      47 +    response.status(201).json(toReservationResponse(reservation
+         +));                                                            
+      48 +  });                                                          
+      49 +                                                               
+      50 +  app.use((error: unknown, _request: Request, response: Respons
+         +e, next: NextFunction) => {                                    
+      51 +    if (error instanceof DomainError) {                        
+      52 +      response.status(statusByCode[error.code]).json({ code: er
+         +ror.code, message: error.message });                           
+      53 +      return;                                                  
+      54 +    }                                                          
+     … 4 more lines (ctrl+o to expand)
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; git add src && git commit -q -m
+      "feat: reject a debut that is not on a quarter hour…)
+  ⎿  Error: Exit code 127
+     warning: LF will be replaced by CRLF in src/application/ReserveSalle.ts.
+     The file will have its original line endings in your working directory
+     warning: LF will be replaced by CRLF in src/domaine/Reservation.ts.
+     The file will have its original line endings in your working directory
+     warning: LF will be replaced by CRLF in src/infrastructure/app.ts.
+     The file will have its original line endings in your working directory
+     warning: LF will be replaced by CRLF in src/domaine/Creneau.ts.
+     The file will have its original line endings in your working directory
+     warning: LF will be replaced by CRLF in src/domaine/DomainError.ts.
+     … +17 lines (ctrl+o to expand)
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; git log --oneline -1;
+      S="C:/Users/pocho/AppData/Local/Temp/claude/3fa874987f98a11b/213cc299-fd3d
+      -4ae5-837c-c442d5a79401/sc…)
+  ⎿  Updated tests\reservations.test.ts (+7 -0)
+      39      expect(response.status).toBe(422);
+      40      expect(response.body).toEqual({ code: 'CRENEAU_INVALIDE', m
+          essage: expect.any(String) });
+      41    });
+      42 +                                                               
+      43 +  it('returns 422 CRENEAU_INVALIDE when fin is not on a quarter
+         + hour', async () => {                                          
+      44 +    const response = await postReservation('A', { fin: '10:05' 
+         +});                                                            
+      45 +                                                               
+      46 +    expect(response.status).toBe(422);                         
+      47 +    expect(response.body).toEqual({ code: 'CRENEAU_INVALIDE', m
+         +essage: expect.any(String) });                                 
+      48 +  });                                                          
+      49  });
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; S="C:/Users/pocho/AppData/Local/Tem
+      p/claude/3fa874987f98a11b/213cc299-fd3d-4ae5-837c-c442d5a79401/scratchpad"
+      git add test…)
+  ⎿  Updated src\domaine\Creneau.ts (+6 -2)
+      11    return hours * 60 + minutes;
+      12  }
+      13  
+      14 +function isOnQuarterHour(minutes: number): boolean {           
+      15 +  return minutes % 15 === 0;                                   
+      16 +}                                                              
+      17 +                                                               
+      18  export class Creneau {
+      19    private constructor(
+      20      readonly debut: string,
+     ...
+      22    ) {}
+      23  
+      24    static create(debut: string, fin: string): Creneau {
+      21 -    if (toMinutes(debut) % 15 !== 0) {                         
+      22 -      throw new CreneauInvalideError('debut must be on a quarte
+         -r hour');                                                      
+      25 +    if (!isOnQuarterHour(toMinutes(debut)) || !isOnQuarterHour(
+         +toMinutes(fin))) {                                             
+      26 +      throw new CreneauInvalideError('debut and fin must be on 
+         +a quarter hour');                                              
+      27      }
+      28      return new Creneau(debut, fin);
+      29    }
+
+● Cycle 4: duration under 30 minutes is refused (09:00–09:15), and 30 minutes is
+  accepted as the boundary.
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; S="C:/Users/pocho/AppData/Local/Tem
+      p/claude/3fa874987f98a11b/213cc299-fd3d-4ae5-837c-c442d5a79401/scratchpad"
+      git add src…)
+  ⎿  Updated tests\reservations.test.ts (+13 -0)
+      46      expect(response.status).toBe(422);
+      47      expect(response.body).toEqual({ code: 'CRENEAU_INVALIDE', m
+          essage: expect.any(String) });
+      48    });
+      49 +                                                               
+      50 +  it('returns 422 CRENEAU_INVALIDE when the duration is less th
+         +an 30 minutes', async () => {                                  
+      51 +    const response = await postReservation('A', { debut: '09:00
+         +', fin: '09:15' });                                            
+      52 +                                                               
+      53 +    expect(response.status).toBe(422);                         
+      54 +    expect(response.body).toEqual({ code: 'CRENEAU_INVALIDE', m
+         +essage: expect.any(String) });                                 
+      55 +  });                                                          
+      56 +                                                               
+      57 +  it('accepts a duration of exactly 30 minutes', async () => { 
+      58 +    const response = await postReservation('A', { debut: '09:00
+         +', fin: '09:30' });                                            
+      59 +                                                               
+      60 +    expect(response.status).toBe(201);                         
+      61 +  });                                                          
+      62  });
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; S="C:/Users/pocho/AppData/Local/Tem
+      p/claude/3fa874987f98a11b/213cc299-fd3d-4ae5-837c-c442d5a79401/scratchpad"
+      git add test…)
+  ⎿  Updated src\domaine\Creneau.ts (+9 -1)
+       6    }
+       7  }
+       8  
+       9 +const MIN_DURATION_IN_MINUTES = 30;                            
+      10 +                                                               
+      11  function toMinutes(heure: string): number {
+      12    const [hours, minutes] = heure.split(':').map(Number);
+      13    return hours * 60 + minutes;
+     ...
+      24    ) {}
+      25  
+      26    static create(debut: string, fin: string): Creneau {
+      25 -    if (!isOnQuarterHour(toMinutes(debut)) || !isOnQuarterHour(
+         -toMinutes(fin))) {                                             
+      27 +    const debutInMinutes = toMinutes(debut);                   
+      28 +    const finInMinutes = toMinutes(fin);                       
+      29 +                                                               
+      30 +    if (!isOnQuarterHour(debutInMinutes) || !isOnQuarterHour(fi
+         +nInMinutes)) {                                                 
+      31        throw new CreneauInvalideError('debut and fin must be on 
+          a quarter hour');
+      32      }
+      33 +    if (finInMinutes - debutInMinutes < MIN_DURATION_IN_MINUTES
+         +) {                                                            
+      34 +      throw new CreneauInvalideError('a creneau must last at le
+         +ast 30 minutes');                                              
+      35 +    }                                                          
+      36      return new Creneau(debut, fin);
+      37    }
+      38  }
+
+● Cycle 5: duration over 4 hours is refused (09:00–13:15), and exactly 4 hours
+  is accepted.
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; S="C:/Users/pocho/AppData/Local/Tem
+      p/claude/3fa874987f98a11b/213cc299-fd3d-4ae5-837c-c442d5a79401/scratchpad"
+      git add src…)  ⎿  Updated tests\reservations.test.ts (+13 -0)
+      59  
+      60      expect(response.status).toBe(201);
+      61    });
+      62 +                                                               
+      63 +  it('returns 422 CRENEAU_INVALIDE when the duration is more th
+         +an 4 hours', async () => {                                     
+      64 +    const response = await postReservation('A', { debut: '09:00
+         +', fin: '13:15' });                                            
+      65 +                                                               
+      66 +    expect(response.status).toBe(422);                         
+      67 +    expect(response.body).toEqual({ code: 'CRENEAU_INVALIDE', m
+         +essage: expect.any(String) });                                 
+      68 +  });                                                          
+      69 +                                                               
+      70 +  it('accepts a duration of exactly 4 hours', async () => {    
+      71 +    const response = await postReservation('A', { debut: '09:00
+         +', fin: '13:00' });                                            
+      72 +                                                               
+      73 +    expect(response.status).toBe(201);                         
+      74 +  });                                                          
+      75  });
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; S="C:/Users/pocho/AppData/Local/Tem
+      p/claude/3fa874987f98a11b/213cc299-fd3d-4ae5-837c-c442d5a79401/scratchpad"
+      git add test…)
+  ⎿  Updated src\domaine\Creneau.ts (+4 -2)
+       7  }
+       8  
+       9  const MIN_DURATION_IN_MINUTES = 30;
+      10 +const MAX_DURATION_IN_MINUTES = 4 * 60;                        
+      11  
+      12  function toMinutes(heure: string): number {
+      13    const [hours, minutes] = heure.split(':').map(Number);
+     ...
+      31      if (!isOnQuarterHour(debutInMinutes) || !isOnQuarterHour(fi
+          nInMinutes)) {
+      32        throw new CreneauInvalideError('debut and fin must be on 
+          a quarter hour');
+      33      }
+      33 -    if (finInMinutes - debutInMinutes < MIN_DURATION_IN_MINUTES
+         -) {                                                            
+      34 -      throw new CreneauInvalideError('a creneau must last at le
+         -ast 30 minutes');                                              
+      34 +    const duration = finInMinutes - debutInMinutes;            
+      35 +    if (duration < MIN_DURATION_IN_MINUTES || duration > MAX_DU
+         +RATION_IN_MINUTES) {                                           
+      36 +      throw new CreneauInvalideError('a creneau must last betwe
+         +en 30 minutes and 4 hours');                                   
+      37      }
+      38      return new Creneau(debut, fin);
+      39    }
+
+● Cycle 6: a start before 08:00 is refused (07:45), and a start at 08:00 is
+  accepted.
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; S="C:/Users/pocho/AppData/Local/Tem
+      p/claude/3fa874987f98a11b/213cc299-fd3d-4ae5-837c-c442d5a79401/scratchpad"
+      git add src…)
+  ⎿  Updated tests\reservations.test.ts (+13 -0)
+      72  
+      73      expect(response.status).toBe(201);
+      74    });
+      75 +                                                               
+      76 +  it('returns 422 CRENEAU_INVALIDE when debut is before 08:00',
+         + async () => {                                                 
+      77 +    const response = await postReservation('A', { debut: '07:45
+         +', fin: '09:00' });                                            
+      78 +                                                               
+      79 +    expect(response.status).toBe(422);                         
+      80 +    expect(response.body).toEqual({ code: 'CRENEAU_INVALIDE', m
+         +essage: expect.any(String) });                                 
+      81 +  });                                                          
+      82 +                                                               
+      83 +  it('accepts a debut at 08:00', async () => {                 
+      84 +    const response = await postReservation('A', { debut: '08:00
+         +', fin: '09:00' });                                            
+      85 +                                                               
+      86 +    expect(response.status).toBe(201);                         
+      87 +  });                                                          
+      88  });
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; S="C:/Users/pocho/AppData/Local/Tem
+      p/claude/3fa874987f98a11b/213cc299-fd3d-4ae5-837c-c442d5a79401/scratchpad"
+      git add test…)
+  ⎿  Updated src\domaine\Creneau.ts (+4 -0)
+       8  
+       9  const MIN_DURATION_IN_MINUTES = 30;
+      10  const MAX_DURATION_IN_MINUTES = 4 * 60;
+      11 +const OPENING_IN_MINUTES = 8 * 60;                             
+      12  
+      13  function toMinutes(heure: string): number {
+      14    const [hours, minutes] = heure.split(':').map(Number);
+     ...
+      36      if (duration < MIN_DURATION_IN_MINUTES || duration > MAX_DU
+          RATION_IN_MINUTES) {
+      37        throw new CreneauInvalideError('a creneau must last betwe
+          en 30 minutes and 4 hours');
+      38      }
+      39 +    if (debutInMinutes < OPENING_IN_MINUTES) {                 
+      40 +      throw new CreneauInvalideError('a creneau must start at 0
+         +8:00 or later');                                               
+      41 +    }                                                          
+      42      return new Creneau(debut, fin);
+      43    }
+      44  }
+
+● Cycle 7: an end after 20:00 is refused (19:00–20:15), and an end at 20:00 is
+  accepted.
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; S="C:/Users/pocho/AppData/Local/Tem
+      p/claude/3fa874987f98a11b/213cc299-fd3d-4ae5-837c-c442d5a79401/scratchpad"
+      git add src…)
+  ⎿  Updated tests\reservations.test.ts (+13 -0)
+       85  
+       86      expect(response.status).toBe(201);
+       87    });
+       88 +                                                              
+       89 +  it('returns 422 CRENEAU_INVALIDE when fin is after 20:00', a
+          +sync () => {                                                  
+       90 +    const response = await postReservation('A', { debut: '19:0
+          +0', fin: '20:15' });                                          
+       91 +                                                              
+       92 +    expect(response.status).toBe(422);                        
+       93 +    expect(response.body).toEqual({ code: 'CRENEAU_INVALIDE', 
+          +message: expect.any(String) });                               
+       94 +  });                                                         
+       95 +                                                              
+       96 +  it('accepts a fin at 20:00', async () => {                  
+       97 +    const response = await postReservation('A', { debut: '19:0
+          +0', fin: '20:00' });                                          
+       98 +                                                              
+       99 +    expect(response.status).toBe(201);                        
+      100 +  });                                                         
+      101  });
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; S="C:/Users/pocho/AppData/Local/Tem
+      p/claude/3fa874987f98a11b/213cc299-fd3d-4ae5-837c-c442d5a79401/scratchpad"
+      git add test…)
+  ⎿  Updated src\domaine\Creneau.ts (+3 -2)
+       9  const MIN_DURATION_IN_MINUTES = 30;
+      10  const MAX_DURATION_IN_MINUTES = 4 * 60;
+      11  const OPENING_IN_MINUTES = 8 * 60;
+      12 +const CLOSING_IN_MINUTES = 20 * 60;                            
+      13  
+      14  function toMinutes(heure: string): number {
+      15    const [hours, minutes] = heure.split(':').map(Number);
+     ...
+      37      if (duration < MIN_DURATION_IN_MINUTES || duration > MAX_DU
+          RATION_IN_MINUTES) {
+      38        throw new CreneauInvalideError('a creneau must last betwe
+          en 30 minutes and 4 hours');
+      39      }
+      39 -    if (debutInMinutes < OPENING_IN_MINUTES) {                 
+      40 -      throw new CreneauInvalideError('a creneau must start at 0
+         -8:00 or later');                                               
+      40 +    if (debutInMinutes < OPENING_IN_MINUTES || finInMinutes > C
+         +LOSING_IN_MINUTES) {                                           
+      41 +      throw new CreneauInvalideError('a creneau must be between
+         + 08:00 and 20:00');                                            
+      42      }
+      43      return new Creneau(debut, fin);
+      44    }
+
+● Cycle 8: fewer than 1 participant is refused (0), and 1 participant is
+  accepted.
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; S="C:/Users/pocho/AppData/Local/Tem
+      p/claude/3fa874987f98a11b/213cc299-fd3d-4ae5-837c-c442d5a79401/scratchpad"
+      git add src…)
+  ⎿  Updated tests\reservations.test.ts (+13 -0)
+       98  
+       99      expect(response.status).toBe(201);
+      100    });
+      101 +                                                              
+      102 +  it('returns 422 CAPACITE_DEPASSEE when there are fewer than 
+          +1 participant', async () => {                                 
+      103 +    const response = await postReservation('A', { participants
+          +: 0 });                                                       
+      104 +                                                              
+      105 +    expect(response.status).toBe(422);                        
+      106 +    expect(response.body).toEqual({ code: 'CAPACITE_DEPASSEE',
+          + message: expect.any(String) });                              
+      107 +  });                                                         
+      108 +                                                              
+      109 +  it('accepts 1 participant', async () => {                   
+      110 +    const response = await postReservation('A', { participants
+          +: 1 });                                                       
+      111 +                                                              
+      112 +    expect(response.status).toBe(201);                        
+      113 +  });                                                         
+      114  });
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; S="C:/Users/pocho/AppData/Local/Tem
+      p/claude/3fa874987f98a11b/213cc299-fd3d-4ae5-837c-c442d5a79401/scratchpad"
+      git add test…)
+  ⎿  Updated src\application\ReserveSalle.ts (+5 -1)
+      1  import { randomUUID } from 'node:crypto';
+      2  import { Creneau } from '../domaine/Creneau';
+      3 +import { PlanningSalle } from '../domaine/PlanningSalle';       
+      4  import { Reservation } from '../domaine/Reservation';
+      5  
+      6  export interface ReserveSalleCommand {
+     ...
+      14  
+      15  export class ReserveSalle {
+      16    execute(command: ReserveSalleCommand): Reservation {
+      16 -    return new Reservation(                                    
+      17 +    const planning = new PlanningSalle(command.salleId, command
+         +.date);                                                        
+      18 +    const reservation = new Reservation(                       
+      19        randomUUID(),
+      20        command.salleId,
+      21        command.date,
+     ...
+      23        command.organisateur,
+      24        command.participants,
+      25      );
+      26 +    planning.add(reservation);                                 
+      27 +    return reservation;                                        
+      28    }
+      29  }
+  ⎿  Created src\domaine\PlanningSalle.ts (+24 -0)
+       1 +import { DomainError } from './DomainError';                   
+       2 +import { Reservation } from './Reservation';                   
+       3 +                                                               
+       4 +export class CapaciteDepasseeError extends DomainError {       
+       5 +  constructor(message: string) {                               
+       6 +    super('CAPACITE_DEPASSEE', message);                       
+       7 +  }                                                            
+       8 +}                                                              
+       9 +                                                               
+      10 +export class PlanningSalle {                                   
+      11 +  private readonly reservations: Reservation[] = [];           
+      12 +                                                               
+      13 +  constructor(                                                 
+      14 +    readonly salleId: string,                                  
+      15 +    readonly date: string,                                     
+      16 +  ) {}                                                         
+      17 +                                                               
+      18 +  add(reservation: Reservation): void {                        
+      19 +    if (reservation.participants < 1) {                        
+      20 +      throw new CapaciteDepasseeError('a reservation needs at l
+         +east 1 participant');                                          
+      21 +    }                                                          
+      22 +    this.reservations.push(reservation);                       
+      23 +  }                                                            
+      24 +}                                                              
+  ⎿  Updated src\infrastructure\app.ts (+1 -0)
+       8  
+       9  const statusByCode: Record<string, number> = {
+      10    CRENEAU_INVALIDE: 422,
+      11 +  CAPACITE_DEPASSEE: 422,                                      
+      12  };
+      13  
+      14  function toReservationResponse(reservation: Reservation) {
+
+● Cycle 9: more participants than the salle's capacity is refused (5 in A), and
+  exactly the capacity is accepted (4 in A).
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; S="C:/Users/pocho/AppData/Local/Tem
+      p/claude/3fa874987f98a11b/213cc299-fd3d-4ae5-837c-c442d5a79401/scratchpad"
+      git add src…)
+  ⎿  Updated tests\reservations.test.ts (+13 -0)
+      111  
+      112      expect(response.status).toBe(201);
+      113    });
+      114 +                                                              
+      115 +  it('returns 422 CAPACITE_DEPASSEE when participants exceed t
+          +he salle capacite', async () => {                             
+      116 +    const response = await postReservation('A', { participants
+          +: 5 });                                                       
+      117 +                                                              
+      118 +    expect(response.status).toBe(422);                        
+      119 +    expect(response.body).toEqual({ code: 'CAPACITE_DEPASSEE',
+          + message: expect.any(String) });                              
+      120 +  });                                                         
+      121 +                                                              
+      122 +  it('accepts participants equal to the salle capacite', async
+          + () => {                                                      
+      123 +    const response = await postReservation('A', { participants
+          +: 4 });                                                       
+      124 +                                                              
+      125 +    expect(response.status).toBe(201);                        
+      126 +  });                                                         
+      127  });
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; S="C:/Users/pocho/AppData/Local/Tem
+      p/claude/3fa874987f98a11b/213cc299-fd3d-4ae5-837c-c442d5a79401/scratchpad"
+      git add test…)
+  ⎿  Updated src\application\ReserveSalle.ts (+10 -2)
+      2  import { Creneau } from '../domaine/Creneau';
+      3  import { PlanningSalle } from '../domaine/PlanningSalle';
+      4  import { Reservation } from '../domaine/Reservation';
+      5 +import { SalleInconnueError } from '../domaine/Salle';          
+      6 +import { SalleRepository } from '../domaine/SalleRepository';   
+      7  
+      8  export interface ReserveSalleCommand {
+      9    salleId: string;
+     ...
+      15  }
+      16  
+      17  export class ReserveSalle {
+      18 +  constructor(private readonly salleRepository: SalleRepository
+         +) {}                                                           
+      19 +                                                               
+      20    execute(command: ReserveSalleCommand): Reservation {
+      17 -    const planning = new PlanningSalle(command.salleId, command
+         -.date);                                                        
+      21 +    const salle = this.salleRepository.findById(command.salleId
+         +);                                                             
+      22 +    if (!salle) {                                              
+      23 +      throw new SalleInconnueError(command.salleId);           
+      24 +    }                                                          
+      25 +    const planning = new PlanningSalle(salle, command.date);   
+      26      const reservation = new Reservation(
+      27        randomUUID(),
+      20 -      command.salleId,                                         
+      28 +      salle.id,                                                
+      29        command.date,
+      30        Creneau.create(command.debut, command.fin),
+      31        command.organisateur,
+  ⎿  Updated src\domaine\PlanningSalle.ts (+6 -3)
+      1  import { DomainError } from './DomainError';
+      2  import { Reservation } from './Reservation';
+      3 +import { Salle } from './Salle';                                
+      4  
+      5  export class CapaciteDepasseeError extends DomainError {
+      6    constructor(message: string) {
+     ...
+      12    private readonly reservations: Reservation[] = [];
+      13  
+      14    constructor(
+      14 -    readonly salleId: string,                                  
+      15 +    readonly salle: Salle,                                     
+      16      readonly date: string,
+      17    ) {}
+      18  
+      19    add(reservation: Reservation): void {
+      19 -    if (reservation.participants < 1) {                        
+      20 -      throw new CapaciteDepasseeError('a reservation needs at l
+         -east 1 participant');                                          
+      20 +    if (reservation.participants < 1 || reservation.participant
+         +s > this.salle.capacite) {                                     
+      21 +      throw new CapaciteDepasseeError(                         
+      22 +        `participants must be between 1 and ${this.salle.capaci
+         +te}`,                                                          
+      23 +      );                                                       
+      24      }
+      25      this.reservations.push(reservation);
+      26    }
+  ⎿  Updated src\domaine\Salle.ts (+8 -0)
+       1 +import { DomainError } from './DomainError';                   
+       2 +                                                               
+       3 +export class SalleInconnueError extends DomainError {          
+       4 +  constructor(id: string) {                                    
+       5 +    super('SALLE_INCONNUE', `salle ${id} does not exist`);     
+       6 +  }                                                            
+       7 +}                                                              
+       8 +                                                               
+       9  export class Salle {
+      10    constructor(
+      11      readonly id: string,
+  ⎿  Updated src\domaine\SalleRepository.ts (+1 -0)
+      2  
+      3  export interface SalleRepository {
+      4    findAll(): Salle[];
+      5 +  findById(id: string): Salle | undefined;                      
+      6  }
+  ⎿  Updated src\infrastructure\InMemorySalleRepository.ts (+4 -0)
+      11    findAll(): Salle[] {
+      12      return [...this.salles];
+      13    }
+      14 +                                                               
+      15 +  findById(id: string): Salle | undefined {                    
+      16 +    return this.salles.find((salle) => salle.id === id);       
+      17 +  }                                                            
+      18  }
+  ⎿  … 1 more file changed
+
+● Cycle 10, the shared API format: an unknown salle returns 404 SALLE_INCONNUE.
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; S="C:/Users/pocho/AppData/Local/Tem
+      p/claude/3fa874987f98a11b/213cc299-fd3d-4ae5-837c-c442d5a79401/scratchpad"
+      git add src…)
+  ⎿  Updated tests\reservations.test.ts (+7 -0)
+      124  
+      125      expect(response.status).toBe(201);
+      126    });
+      127 +                                                              
+      128 +  it('returns 404 SALLE_INCONNUE when the salle does not exist
+          +', async () => {                                              
+      129 +    const response = await postReservation('Z');              
+      130 +                                                              
+      131 +    expect(response.status).toBe(404);                        
+      132 +    expect(response.body).toEqual({ code: 'SALLE_INCONNUE', me
+          +ssage: expect.any(String) });                                 
+      133 +  });                                                         
+      134  });
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; S="C:/Users/pocho/AppData/Local/Tem
+      p/claude/3fa874987f98a11b/213cc299-fd3d-4ae5-837c-c442d5a79401/scratchpad"
+      git add test…)
+  ⎿  Updated src\infrastructure\app.ts (+1 -0)
+       9  const statusByCode: Record<string, number> = {
+      10    CRENEAU_INVALIDE: 422,
+      11    CAPACITE_DEPASSEE: 422,
+      12 +  SALLE_INCONNUE: 404,                                         
+      13  };
+      14  
+      15  function toReservationResponse(reservation: Reservation) {
+
+● Cycle 11: an incomplete body (no organisateur) returns 400 REQUETE_INVALIDE.
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; S="C:/Users/pocho/AppData/Local/Tem
+      p/claude/3fa874987f98a11b/213cc299-fd3d-4ae5-837c-c442d5a79401/scratchpad"
+      git add src…)
+  ⎿  Updated tests\reservations.test.ts (+7 -0)
+      131      expect(response.status).toBe(404);
+      132      expect(response.body).toEqual({ code: 'SALLE_INCONNUE', me
+           ssage: expect.any(String) });
+      133    });
+      134 +                                                              
+      135 +  it('returns 400 REQUETE_INVALIDE when the body is incomplete
+          +', async () => {                                              
+      136 +    const response = await postReservation('A', { organisateur
+          +: undefined });                                               
+      137 +                                                              
+      138 +    expect(response.status).toBe(400);                        
+      139 +    expect(response.body).toEqual({ code: 'REQUETE_INVALIDE', 
+          +message: expect.any(String) });                               
+      140 +  });                                                         
+      141  });
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; S="C:/Users/pocho/AppData/Local/Tem
+      p/claude/3fa874987f98a11b/213cc299-fd3d-4ae5-837c-c442d5a79401/scratchpad"
+      git add test…)
+  ⎿  Created src\infrastructure\RequeteInvalideError.ts (+3 -0)
+      1 +export class RequeteInvalideError extends Error {               
+      2 +  readonly code = 'REQUETE_INVALIDE';                           
+      3 +}                                                               
+  ⎿  Updated src\infrastructure\app.ts (+7 -6)
+       5  import { Reservation } from '../domaine/Reservation';
+       6  import { SalleRepository } from '../domaine/SalleRepository';
+       7  import { InMemorySalleRepository } from './InMemorySalleReposit
+          ory';
+       8 +import { parseReservationRequest } from './reservationRequest';
+       9 +import { RequeteInvalideError } from './RequeteInvalideError'; 
+      10  
+      11  const statusByCode: Record<string, number> = {
+      12    CRENEAU_INVALIDE: 422,
+     ...
+      39    });
+      40  
+      41    app.post('/salles/:id/reservations', (request, response) => {
+      40 -    const { date, debut, fin, organisateur, participants } = re
+         -quest.body;                                                    
+      42      const reservation = reserveSalle.execute({
+      43        salleId: request.params.id,
+      43 -      date,                                                    
+      44 -      debut,                                                   
+      45 -      fin,                                                     
+      46 -      organisateur,                                            
+      47 -      participants,                                            
+      44 +      ...parseReservationRequest(request.body),                
+      45      });
+      46      response.status(201).json(toReservationResponse(reservation
+          ));
+      47    });
+      48  
+      49    app.use((error: unknown, _request: Request, response: Respons
+          e, next: NextFunction) => {
+      50 +    if (error instanceof RequeteInvalideError) {               
+      51 +      response.status(400).json({ code: error.code, message: er
+         +ror.message });                                                
+      52 +      return;                                                  
+      53 +    }                                                          
+      54      if (error instanceof DomainError) {
+      55        response.status(statusByCode[error.code]).json({ code: er
+          ror.code, message: error.message });
+      56        return;
+  ⎿  Created src\infrastructure\reservationRequest.ts (+20 -0)
+       1 +import { RequeteInvalideError } from './RequeteInvalideError'; 
+       2 +                                                               
+       3 +const REQUIRED_FIELDS = ['date', 'debut', 'fin', 'organisateur'
+         +, 'participants'] as const;                                    
+       4 +                                                               
+       5 +export interface ReservationRequest {                          
+       6 +  date: string;                                                
+       7 +  debut: string;                                               
+       8 +  fin: string;                                                 
+       9 +  organisateur: string;                                        
+      10 +  participants: number;                                        
+      11 +}                                                              
+      12 +                                                               
+      13 +export function parseReservationRequest(body: Record<string, un
+         +known>): ReservationRequest {                                  
+      14 +  const missing = REQUIRED_FIELDS.filter((field) => body?.[fiel
+         +d] === undefined);                                             
+      15 +  if (missing.length > 0) {                                    
+      16 +    throw new RequeteInvalideError(`missing fields: ${missing.j
+         +oin(', ')}`);                                                  
+      17 +  }                                                            
+      18 +  const { date, debut, fin, organisateur, participants } = body
+         + as unknown as ReservationRequest;                             
+      19 +  return { date, debut, fin, organisateur, participants };     
+      20 +}                                                              
+
+● Cycle 12: a malformed body (debut: "9h") returns 400 REQUETE_INVALIDE.
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; S="C:/Users/pocho/AppData/Local/Tem
+      p/claude/3fa874987f98a11b/213cc299-fd3d-4ae5-837c-c442d5a79401/scratchpad"
+      git add src…)
+  ⎿  Updated tests\reservations.test.ts (+7 -0)
+      138      expect(response.status).toBe(400);
+      139      expect(response.body).toEqual({ code: 'REQUETE_INVALIDE', 
+           message: expect.any(String) });
+      140    });
+      141 +                                                              
+      142 +  it('returns 400 REQUETE_INVALIDE when the body is badly form
+          +atted', async () => {                                         
+      143 +    const response = await postReservation('A', { debut: '9h' 
+          +});                                                           
+      144 +                                                              
+      145 +    expect(response.status).toBe(400);                        
+      146 +    expect(response.body).toEqual({ code: 'REQUETE_INVALIDE', 
+          +message: expect.any(String) });                               
+      147 +  });                                                         
+      148  });
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; S="C:/Users/pocho/AppData/Local/Tem
+      p/claude/3fa874987f98a11b/213cc299-fd3d-4ae5-837c-c442d5a79401/scratchpad"
+      git add test…)
+  ⎿  Updated src\infrastructure\reservationRequest.ts (+21 -7)
+      1  import { RequeteInvalideError } from './RequeteInvalideError';
+      2  
+      3 -const REQUIRED_FIELDS = ['date', 'debut', 'fin', 'organisateur',
+        - 'participants'] as const;                                      
+      3 +const DATE_FORMAT = /^\d{4}-\d{2}-\d{2}$/;                      
+      4 +const HEURE_FORMAT = /^([01]\d|2[0-3]):[0-5]\d$/;               
+      5  
+      6  export interface ReservationRequest {
+      7    date: string;
+     ...
+      11    participants: number;
+      12  }
+      13  
+      13 -export function parseReservationRequest(body: Record<string, un
+         -known>): ReservationRequest {                                  
+      14 -  const missing = REQUIRED_FIELDS.filter((field) => body?.[fiel
+         -d] === undefined);                                             
+      15 -  if (missing.length > 0) {                                    
+      16 -    throw new RequeteInvalideError(`missing fields: ${missing.j
+         -oin(', ')}`);                                                  
+      14 +function matches(value: unknown, format: RegExp): value is stri
+         +ng {                                                           
+      15 +  return typeof value === 'string' && format.test(value);      
+      16 +}                                                              
+      17 +                                                               
+      18 +export function parseReservationRequest(body: unknown): Reserva
+         +tionRequest {                                                  
+      19 +  const { date, debut, fin, organisateur, participants } = (bod
+         +y ?? {}) as Record<string, unknown>;                           
+      20 +                                                               
+      21 +  if (                                                         
+      22 +    !matches(date, DATE_FORMAT) ||                             
+      23 +    !matches(debut, HEURE_FORMAT) ||                           
+      24 +    !matches(fin, HEURE_FORMAT) ||                             
+      25 +    typeof organisateur !== 'string' ||                        
+      26 +    organisateur === '' ||                                     
+      27 +    !Number.isInteger(participants)                            
+      28 +  ) {                                                          
+      29 +    throw new RequeteInvalideError(                            
+      30 +      'expected { date: "AAAA-MM-JJ", debut: "HH:MM", fin: "HH:
+         +MM", organisateur, participants }',                            
+      31 +    );                                                         
+      32    }
+      18 -  const { date, debut, fin, organisateur, participants } = body
+         - as unknown as ReservationRequest;                             
+      19 -  return { date, debut, fin, organisateur, participants };     
+      33 +  return { date, debut, fin, organisateur, participants: partic
+         +ipants as number };                                            
+      34  }
+
+● Story 2 is finished with all 19 tests passing; I'm starting Story 3, cycle 13,
+  where an overlapping reservation should return 409 CHEVAUCHEMENT, with its
+  three accepted cases each in their own it.
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; S="C:/Users/pocho/AppData/Local/Tem
+      p/claude/3fa874987f98a11b/213cc299-fd3d-4ae5-837c-c442d5a79401/scratchpad"
+      git add src…)  ⎿  Created tests\chevauchement.test.ts (+60 -0)
+       1 +import { describe, it, expect } from 'vitest';                 
+       2 +import request from 'supertest';                               
+       3 +import { createApp } from '../src/infrastructure/app';         
+       4 +                                                               
+       5 +const validBody = {                                            
+       6 +  date: '2026-12-01',                                          
+       7 +  debut: '09:00',                                              
+       8 +  fin: '10:00',                                                
+       9 +  organisateur: 'marie@exemple.fr',                            
+      10 +  participants: 3,                                             
+      11 +};                                                             
+      12 +                                                               
+      13 +function postReservation(                                      
+      14 +  app: ReturnType<typeof createApp>,                           
+      15 +  salleId: string,                                             
+      16 +  overrides: Record<string, unknown> = {},                     
+      17 +) {                                                            
+      18 +  return request(app)                                          
+      19 +    .post(`/salles/${salleId}/reservations`)                   
+      20 +    .send({ ...validBody, ...overrides });                     
+      21 +}                                                              
+      22 +                                                               
+      23 +describe('Reservation overlap', () => {                        
+      24 +  it('returns 409 CHEVAUCHEMENT when the creneau overlaps an ex
+         +isting reservation of the same salle and date', async () => {  
+      25 +    const app = createApp();                                   
+      26 +    await postReservation(app, 'A', { debut: '09:00', fin: '10:
+         +00' });                                                        
+      27 +                                                               
+      28 +    const response = await postReservation(app, 'A', { debut: '
+         +09:30', fin: '10:30' });                                       
+      29 +                                                               
+      30 +    expect(response.status).toBe(409);                         
+      31 +    expect(response.body).toEqual({ code: 'CHEVAUCHEMENT', mess
+         +age: expect.any(String) });                                    
+      32 +  });                                                          
+      33 +                                                               
+      34 +  it('accepts contiguous creneaux', async () => {              
+      35 +    const app = createApp();                                   
+      36 +    await postReservation(app, 'A', { debut: '09:00', fin: '10:
+         +00' });                                                        
+      37 +                                                               
+      38 +    const response = await postReservation(app, 'A', { debut: '
+         +10:00', fin: '11:00' });                                       
+      39 +                                                               
+      40 +    expect(response.status).toBe(201);                         
+     … 20 more lines (ctrl+o to expand)
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; S="C:/Users/pocho/AppData/Local/Tem
+      p/claude/3fa874987f98a11b/213cc299-fd3d-4ae5-837c-c442d5a79401/scratchpad"
+      git add test…)
+  ⎿  Updated src\application\ReserveSalle.ts (+7 -3)
+      1  import { randomUUID } from 'node:crypto';
+      2  import { Creneau } from '../domaine/Creneau';
+      3 -import { PlanningSalle } from '../domaine/PlanningSalle';       
+      3 +import { PlanningRepository } from '../domaine/PlanningRepositor
+        +y';                                                             
+      4  import { Reservation } from '../domaine/Reservation';
+      5  import { SalleInconnueError } from '../domaine/Salle';
+      6  import { SalleRepository } from '../domaine/SalleRepository';
+     ...
+      15  }
+      16  
+      17  export class ReserveSalle {
+      18 -  constructor(private readonly salleRepository: SalleRepository
+         -) {}                                                           
+      18 +  constructor(                                                 
+      19 +    private readonly salleRepository: SalleRepository,         
+      20 +    private readonly planningRepository: PlanningRepository,   
+      21 +  ) {}                                                         
+      22  
+      23    execute(command: ReserveSalleCommand): Reservation {
+      24      const salle = this.salleRepository.findById(command.salleId
+          );
+      25      if (!salle) {
+      26        throw new SalleInconnueError(command.salleId);
+      27      }
+      25 -    const planning = new PlanningSalle(salle, command.date);   
+      28 +    const planning = this.planningRepository.findBySalleAndDate
+         +(salle, command.date);                                         
+      29      const reservation = new Reservation(
+      30        randomUUID(),
+      31        salle.id,
+     ...
+      35        command.participants,
+      36      );
+      37      planning.add(reservation);
+      38 +    this.planningRepository.save(planning);                    
+      39      return reservation;
+      40    }
+      41  }
+  ⎿  Updated src\domaine\Creneau.ts (+4 -0)
+      42      }
+      43      return new Creneau(debut, fin);
+      44    }
+      45 +                                                               
+      46 +  overlaps(other: Creneau): boolean {                          
+      47 +    return toMinutes(this.debut) < toMinutes(other.fin) && toMi
+         +nutes(other.debut) < toMinutes(this.fin);                      
+      48 +  }                                                            
+      49  }
+  ⎿  Created src\domaine\PlanningRepository.ts (+7 -0)
+      1 +import { PlanningSalle } from './PlanningSalle';                
+      2 +import { Salle } from './Salle';                                
+      3 +                                                                
+      4 +export interface PlanningRepository {                           
+      5 +  findBySalleAndDate(salle: Salle, date: string): PlanningSalle;
+      6 +  save(planning: PlanningSalle): void;                          
+      7 +}                                                               
+  ⎿  Updated src\domaine\PlanningSalle.ts (+18 -2)
+       8    }
+       9  }
+      10  
+      11 +export class ChevauchementError extends DomainError {          
+      12 +  constructor(message: string) {                               
+      13 +    super('CHEVAUCHEMENT', message);                           
+      14 +  }                                                            
+      15 +}                                                              
+      16 +                                                               
+      17  export class PlanningSalle {
+      12 -  private readonly reservations: Reservation[] = [];           
+      18 +  private readonly reservations: Reservation[];                
+      19  
+      20    constructor(
+      21      readonly salle: Salle,
+      22      readonly date: string,
+      17 -  ) {}                                                         
+      23 +    reservations: Reservation[] = [],                          
+      24 +  ) {                                                          
+      25 +    this.reservations = [...reservations];                     
+      26 +  }                                                            
+      27 +                                                               
+      28 +  getReservations(): Reservation[] {                           
+      29 +    return [...this.reservations];                             
+      30 +  }                                                            
+      31  
+      32    add(reservation: Reservation): void {
+      33      if (reservation.participants < 1 || reservation.participant
+          s > this.salle.capacite) {
+     ...
+      35          `participants must be between 1 and ${this.salle.capaci
+          te}`,
+      36        );
+      37      }
+      38 +    if (this.reservations.some((existing) => existing.creneau.o
+         +verlaps(reservation.creneau))) {                               
+      39 +      throw new ChevauchementError('the creneau overlaps an exi
+         +sting reservation');                                           
+      40 +    }                                                          
+      41      this.reservations.push(reservation);
+      42    }
+      43  }
+  ⎿  Created src\infrastructure\InMemoryPlanningRepository.ts (+20 -0)
+       1 +import { PlanningRepository } from '../domaine/PlanningReposito
+         +ry';                                                           
+       2 +import { PlanningSalle } from '../domaine/PlanningSalle';      
+       3 +import { Reservation } from '../domaine/Reservation';          
+       4 +import { Salle } from '../domaine/Salle';                      
+       5 +                                                               
+       6 +export class InMemoryPlanningRepository implements PlanningRepo
+         +sitory {                                                       
+       7 +  private readonly reservationsByKey = new Map<string, Reservat
+         +ion[]>();                                                      
+       8 +                                                               
+       9 +  findBySalleAndDate(salle: Salle, date: string): PlanningSalle
+         + {                                                             
+      10 +    return new PlanningSalle(salle, date, this.reservationsByKe
+         +y.get(this.key(salle.id, date)));                              
+      11 +  }                                                            
+      12 +                                                               
+      13 +  save(planning: PlanningSalle): void {                        
+      14 +    this.reservationsByKey.set(this.key(planning.salle.id, plan
+         +ning.date), planning.getReservations());                       
+      15 +  }                                                            
+      16 +                                                               
+      17 +  private key(salleId: string, date: string): string {         
+      18 +    return `${salleId}|${date}`;                               
+      19 +  }                                                            
+      20 +}                                                              
+  ⎿  … 1 more file changed
+
+● Story 3 is finished with all 23 tests green, and I'm starting Story 4 by
+  writing the empty-planning test, starting with a date that has no reservation.
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; S="C:/Users/pocho/AppData/Local/Tem
+      p/claude/3fa874987f98a11b/213cc299-fd3d-4ae5-837c-c442d5a79401/scratchpad"
+      git add src…)
+  ⎿  Created tests\planning.test.ts (+12 -0)
+       1 +import { describe, it, expect } from 'vitest';                 
+       2 +import request from 'supertest';                               
+       3 +import { createApp } from '../src/infrastructure/app';         
+       4 +                                                               
+       5 +describe('GET /salles/:id/planning', () => {                   
+       6 +  it('returns 200 and an empty list for a date without reservat
+         +ion', async () => {                                            
+       7 +    const response = await request(createApp()).get('/salles/A/
+         +planning?date=2026-12-01');                                    
+       8 +                                                               
+       9 +    expect(response.status).toBe(200);                         
+      10 +    expect(response.body).toEqual([]);                         
+      11 +  });                                                          
+      12 +});                                                            
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; S="C:/Users/pocho/AppData/Local/Tem
+      p/claude/3fa874987f98a11b/213cc299-fd3d-4ae5-837c-c442d5a79401/scratchpad"
+      git add test…)
+  ⎿  Updated src\infrastructure\app.ts (+4 -0)
+      52      response.status(201).json(toReservationResponse(reservation
+          ));
+      53    });
+      54  
+      55 +  app.get('/salles/:id/planning', (_request, response) => {    
+      56 +    response.status(200).json([]);                             
+      57 +  });                                                          
+      58 +                                                               
+      59    app.use((error: unknown, _request: Request, response: Respons
+          e, next: NextFunction) => {
+      60      if (error instanceof RequeteInvalideError) {
+      61        response.status(400).json({ code: error.code, message: er
+          ror.message });
+
+● Cycle 15: the planning returns that day's reservations, sorted by debut.
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; S="C:/Users/pocho/AppData/Local/Tem
+      p/claude/3fa874987f98a11b/213cc299-fd3d-4ae5-837c-c442d5a79401/scratchpad"
+      git add src…)
+  ⎿  Updated tests\planning.test.ts (+27 -0)
+       9      expect(response.status).toBe(200);
+      10      expect(response.body).toEqual([]);
+      11    });
+      12 +                                                               
+      13 +  it('returns 200 and the reservations of the date sorted by de
+         +but', async () => {                                            
+      14 +    const app = createApp();                                   
+      15 +    const reserve = (date: string, debut: string, fin: string) 
+         +=>                                                             
+      16 +      request(app)                                             
+      17 +        .post('/salles/A/reservations')                        
+      18 +        .send({ date, debut, fin, organisateur: 'marie@exemple.
+         +fr', participants: 3 });                                       
+      19 +    await reserve('2026-12-01', '14:00', '15:00');             
+      20 +    await reserve('2026-12-01', '09:00', '10:00');             
+      21 +    await reserve('2026-12-02', '08:00', '09:00');             
+      22 +                                                               
+      23 +    const response = await request(app).get('/salles/A/planning
+         +?date=2026-12-01');                                            
+      24 +                                                               
+      25 +    expect(response.status).toBe(200);                         
+      26 +    expect(response.body.map((reservation: { debut: string }) =
+         +> reservation.debut)).toEqual([                                
+      27 +      '09:00',                                                 
+      28 +      '14:00',                                                 
+      29 +    ]);                                                        
+      30 +    expect(response.body[0]).toMatchObject({                   
+      31 +      id: expect.any(String),                                  
+      32 +      date: '2026-12-01',                                      
+      33 +      debut: '09:00',                                          
+      34 +      fin: '10:00',                                            
+      35 +      organisateur: 'marie@exemple.fr',                        
+      36 +      participants: 3,                                         
+      37 +    });                                                        
+      38 +  });                                                          
+      39  });
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; S="C:/Users/pocho/AppData/Local/Tem
+      p/claude/3fa874987f98a11b/213cc299-fd3d-4ae5-837c-c442d5a79401/scratchpad"
+      git add test…)
+  ⎿  Created src\application\ConsultPlanning.ts (+19 -0)
+       1 +import { PlanningRepository } from '../domaine/PlanningReposito
+         +ry';                                                           
+       2 +import { Reservation } from '../domaine/Reservation';          
+       3 +import { SalleInconnueError } from '../domaine/Salle';         
+       4 +import { SalleRepository } from '../domaine/SalleRepository';  
+       5 +                                                               
+       6 +export class ConsultPlanning {                                 
+       7 +  constructor(                                                 
+       8 +    private readonly salleRepository: SalleRepository,         
+       9 +    private readonly planningRepository: PlanningRepository,   
+      10 +  ) {}                                                         
+      11 +                                                               
+      12 +  execute(salleId: string, date: string): Reservation[] {      
+      13 +    const salle = this.salleRepository.findById(salleId);      
+      14 +    if (!salle) {                                              
+      15 +      throw new SalleInconnueError(salleId);                   
+      16 +    }                                                          
+      17 +    return this.planningRepository.findBySalleAndDate(salle, da
+         +te).getReservations();                                         
+      18 +  }                                                            
+      19 +}                                                              
+  ⎿  Updated src\domaine\PlanningSalle.ts (+3 -1)
+      26    }
+      27  
+      28    getReservations(): Reservation[] {
+      29 -    return [...this.reservations];                             
+      29 +    return [...this.reservations].sort((a, b) =>               
+      30 +      a.creneau.debut.localeCompare(b.creneau.debut),          
+      31 +    );                                                         
+      32    }
+      33  
+      34    add(reservation: Reservation): void {
+  ⎿  Updated src\infrastructure\app.ts (+5 -2)
+      1  import express, { NextFunction, Request, Response } from 'expres
+         s';
+      2 +import { ConsultPlanning } from '../application/ConsultPlanning'
+        +;                                                               
+      3  import { ListSalles } from '../application/ListSalles';
+      4  import { ReserveSalle } from '../application/ReserveSalle';
+      5  import { DomainError } from '../domaine/DomainError';
+     ...
+      39  
+      40    const listSalles = new ListSalles(salleRepository);
+      41    const reserveSalle = new ReserveSalle(salleRepository, planni
+          ngRepository);
+      42 +  const consultPlanning = new ConsultPlanning(salleRepository, 
+         +planningRepository);                                           
+      43  
+      44    app.get('/salles', (_request, response) => {
+      45      const salles = listSalles.execute().map(({ id, nom, capacit
+          e }) => ({ id, nom, capacite }));
+     ...
+      54      response.status(201).json(toReservationResponse(reservation
+          ));
+      55    });
+      56  
+      55 -  app.get('/salles/:id/planning', (_request, response) => {    
+      56 -    response.status(200).json([]);                             
+      57 +  app.get('/salles/:id/planning', (request, response) => {     
+      58 +    const reservations = consultPlanning.execute(request.params
+         +.id, String(request.query.date));                              
+      59 +    response.status(200).json(reservations.map(toReservationRes
+         +ponse));                                                       
+      60    });
+      61  
+      62    app.use((error: unknown, _request: Request, response: Respons
+          e, next: NextFunction) => {
+
+● Cycle 16: a missing date returns 400 REQUETE_INVALIDE.
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; S="C:/Users/pocho/AppData/Local/Tem
+      p/claude/3fa874987f98a11b/213cc299-fd3d-4ae5-837c-c442d5a79401/scratchpad"
+      git add src…)
+  ⎿  Updated tests\planning.test.ts (+7 -0)
+      36        participants: 3,
+      37      });
+      38    });
+      39 +                                                               
+      40 +  it('returns 400 REQUETE_INVALIDE when the date is missing', a
+         +sync () => {                                                   
+      41 +    const response = await request(createApp()).get('/salles/A/
+         +planning');                                                    
+      42 +                                                               
+      43 +    expect(response.status).toBe(400);                         
+      44 +    expect(response.body).toEqual({ code: 'REQUETE_INVALIDE', m
+         +essage: expect.any(String) });                                 
+      45 +  });                                                          
+      46  });
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; S="C:/Users/pocho/AppData/Local/Tem
+      p/claude/3fa874987f98a11b/213cc299-fd3d-4ae5-837c-c442d5a79401/scratchpad"
+      git add test…)
+  ⎿  Updated src\infrastructure\app.ts (+5 -1)
+       8  import { SalleRepository } from '../domaine/SalleRepository';
+       9  import { InMemoryPlanningRepository } from './InMemoryPlanningR
+          epository';
+      10  import { InMemorySalleRepository } from './InMemorySalleReposit
+          ory';
+      11 +import { parsePlanningDate } from './planningRequest';         
+      12  import { parseReservationRequest } from './reservationRequest';
+      13  import { RequeteInvalideError } from './RequeteInvalideError';
+      14  
+     ...
+      56    });
+      57  
+      58    app.get('/salles/:id/planning', (request, response) => {
+      58 -    const reservations = consultPlanning.execute(request.params
+         -.id, String(request.query.date));                              
+      59 +    const reservations = consultPlanning.execute(              
+      60 +      request.params.id,                                       
+      61 +      parsePlanningDate(request.query.date),                   
+      62 +    );                                                         
+      63      response.status(200).json(reservations.map(toReservationRes
+          ponse));
+      64    });
+      65  
+  ⎿  Created src\infrastructure\planningRequest.ts (+8 -0)
+      1 +import { RequeteInvalideError } from './RequeteInvalideError';  
+      2 +                                                                
+      3 +export function parsePlanningDate(date: unknown): string {      
+      4 +  if (typeof date !== 'string') {                               
+      5 +    throw new RequeteInvalideError('the date query parameter is 
+        +required');                                                     
+      6 +  }                                                             
+      7 +  return date;                                                  
+      8 +}                                                               
+
+● Cycle 17: a badly formatted date (01/12/2026) returns 400 REQUETE_INVALIDE.
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; S="C:/Users/pocho/AppData/Local/Tem
+      p/claude/3fa874987f98a11b/213cc299-fd3d-4ae5-837c-c442d5a79401/scratchpad"
+      git add src…)
+  ⎿  Updated tests\planning.test.ts (+7 -0)
+      43      expect(response.status).toBe(400);
+      44      expect(response.body).toEqual({ code: 'REQUETE_INVALIDE', m
+          essage: expect.any(String) });
+      45    });
+      46 +                                                               
+      47 +  it('returns 400 REQUETE_INVALIDE when the date is badly forma
+         +tted', async () => {                                           
+      48 +    const response = await request(createApp()).get('/salles/A/
+         +planning?date=01/12/2026');                                    
+      49 +                                                               
+      50 +    expect(response.status).toBe(400);                         
+      51 +    expect(response.body).toEqual({ code: 'REQUETE_INVALIDE', m
+         +essage: expect.any(String) });                                 
+      52 +  });                                                          
+      53  });
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; S="C:/Users/pocho/AppData/Local/Tem
+      p/claude/3fa874987f98a11b/213cc299-fd3d-4ae5-837c-c442d5a79401/scratchpad"
+      git add test…)
+  ⎿  Error: Exit code 2
+     import { RequeteInvalideError } from './RequeteInvalideError';
+
+     const DATE_FORMAT = /^\d{4}-\d{2}-\d{2}$/;
+     const HEURE_FORMAT = /^([01]\d|2[0-3]):[0-5]\d$/;
+
+     export interface ReservationRequest {
+       date: string;
+       debut: string;
+       fin: string;
+     … +83 lines (ctrl+o to expand)
+
+● My scripted edit only half-applied: the local matches function got removed,
+  but the import from formats was never added. I'll rewrite the file in full.
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; S="C:/Users/pocho/AppData/Local/Tem
+      p/claude/3fa874987f98a11b/213cc299-fd3d-4ae5-837c-c442d5a79401/scratchpad"
+      cat > src/in…)
+  ⎿  Updated src\infrastructure\reservationRequest.ts (+1 -3)
+      1 +import { DATE_FORMAT, HEURE_FORMAT, matches } from './formats'; 
+      2  import { RequeteInvalideError } from './RequeteInvalideError';
+      3  
+      3 -const DATE_FORMAT = /^\d{4}-\d{2}-\d{2}$/;                      
+      4 -const HEURE_FORMAT = /^([01]\d|2[0-3]):[0-5]\d$/;               
+      5 -                                                                
+      4  export interface ReservationRequest {
+      5    date: string;
+      6    debut: string;
+
+● Bash(cd "e:/Users/pocho/Documents/projet"; git add src 2>/dev/null && git
+      commit -q -m "feat: return 400 REQUETE_INVALIDE when the planning date is
+      badly formatted…)
+  ⎿  (No output)
+
+● Stories 2, 3 and 4 are done: 16 more TDD cycles, each with a test: commit then
+  a feat: commit. All 27 tests pass and the TypeScript check succeeds.
+
+  I ran every test: commit before committing it, and each one failed for the
+  expected reason (missing route, or wrong status).
+
+  Story: 2 – Réserver
+  Cases covered: Start or end not on a quarter hour; duration under 30 min or
+    over 4 h; start before 08:00 or end after 20:00; fewer than 1 participant or
+
+    more than the capacity; unknown salle (404); incomplete or badly formatted
+    body (400)
+  ────────────────────────────────────────
+  Story: 3 – Chevauchement
+  Cases covered: Overlap returns 409 CHEVAUCHEMENT; contiguous creneaux, another
+
+    salle and another date are accepted
+  ────────────────────────────────────────
+  Story: 4 – Planning
+  Cases covered: A date with no reservation returns []; reservations come back
+    sorted by debut; a missing or badly formatted date returns 400
+
+  Where the code lives
+  - Domain: the business rules are in Creneau.ts (src/domaine/Creneau.ts)
+    (quarter hours, duration, 08:00–20:00, overlap) and PlanningSalle.ts
+    (src/domaine/PlanningSalle.ts) (capacity, refusing overlaps, sorting). The
+    domain only imports its own files.
+  - Application: two new use cases, ReserveSalle.ts
+    (src/application/ReserveSalle.ts) and ConsultPlanning.ts
+    (src/application/ConsultPlanning.ts).
+  - Infrastructure: the routes, the in-memory repositories and the request
+    format checks (400). No business rule is in the routes.
+
+  Departures from the one-test-per-cycle rule
+  - Accepted boundary values (30 min, 4 h, 08:00, 20:00, 1 participant,
+    capacity) and the three accepted cases of Story 3 each have their own it.
+    They are committed in the same test: commit as their rejection test. On
+    their own, those tests would already pass at their test: commit, which would
+    break the "npm test fails" check.
+  - Unknown salle on GET /salles/:id/planning: the code returns 404, but no test
+    covers it. A test written now would pass straight away.
+
+  Still to do
+  - Nothing ticked in TACHES.md: it has no checkboxes.
+  - Your edits to CLAUDE.md and TACHES.md aren't committed. I left them out of
+    every commit.
+  - npm start doesn't run: src/infrastructure/serveur.ts doesn't exist yet.
+  - README.md is missing.
+  - Session export: /export into sessions/ and its docs: commit are still to do
+    on your side.
+  - Nothing is pushed.
+
+  Run nvs use 22 before npm test.
+
+> <ide_opened_file>The user opened the file
+  e:\Users\pocho\Documents\projet\TACHES.md in the IDE. This may or may not be
+  related to the current task.</ide_opened_file>
+
+> génére le README.md de l'application
+
+● Write(README.md)
+  ⎿  Wrote 105 lines to README.md
+       1 # Réservation de salles
+       2
+       3 API REST de réservation de salles de réunion, écrite en TypeScri
+         pt avec Express. Les données sont stockées en mémoire, sans base
+          de données. L'application n'a pas d'interface front-end.
+       4
+       5 ## Prérequis
+       6
+       7 - Node.js 20 ou une version supérieure.
+       8 - npm.
+     … +97 lines (ctrl+o to expand)
+
+● Le README.md est écrit. Il n'est pas commité.
+
+  Il contient :
+  - les prérequis, dont Node.js 20 ou plus et le rappel nvs use 22 ;
+  - les commandes npm install, npm test et npm start ;
+  - les 3 routes de l'API, avec des exemples de requête et de réponse et les
+    règles de créneau et de réservation ;
+  - le tableau des erreurs, avec leur statut et leur code ;
+  - l'architecture DDD et la méthode TDD.
+
+  npm start ne fonctionne toujours pas : le README le présente comme démarrant
+  l'API sur le port 3000, ou sur PORT, mais src/infrastructure/serveur.ts
+  n'existe pas encore. Ce fichier ferait seulement démarrer l'application créée
+  par createApp() sur ce port. Il ne contient aucune règle métier, c'est
+  pourquoi aucun cycle TDD ne l'a créé. Veux-tu que je l'ajoute ?
