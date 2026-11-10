@@ -56,26 +56,67 @@ Critères d'acceptation :
 - Une date sans réservation renvoie 200 et une liste vide.
 - Une date absente ou mal formatée renvoie 400, code `REQUETE_INVALIDE`.
 
-## Livrable
+## Story 5 — Consulter les salles disponibles
 
-Un lien vers un dépôt public github.com. Le dépôt contient :
+En tant qu'employé, je veux visualiser les salles de réunion afin de choisir celle qui correspond à mes besoins.
 
-- le code et les tests ;
-- `CLAUDE.md` : les consignes données à Claude Code ;
-- `TACHES.md` : les tâches de chaque story, cochées une fois faites ;
-- `README.md` : les commandes `npm install`, `npm test` et `npm start` ;
-- `sessions/` : les sessions Claude Code exportées avec `/export` ;
-- l'historique git, avec deux commits par cycle TDD : `test:` puis `feat:`.
+Critères d'acceptation : 
 
-## Comment vérifier
+1. La page d'accueil affiche les salles récupérées depuis GET /salles.
+2. Chaque salle affiche son nom et sa capacité.
+3. L'utilisateur peut sélectionner une salle pour consulter son planning.
+4. Un indicateur de chargement apparaît pendant la récupération des salles.
+5. Un message d'erreur apparaît si l'API ne répond pas.
+6. La liste s'actualise sans recharger la page.
 
-| Critère | Vérification |
-| --- | --- |
-| Stories livrées | Chaque cas cité dans un critère d'acceptation a son propre test, qui passe : chaque branche d'un « ou », chaque limite (fin à 20:00 acceptée, 30 minutes, 4 heures, capacité). |
-| Tests verts | `npm install` puis `npm test` passent sur un clone du dépôt. |
-| TDD | Chaque commit `feat:` suit un commit `test:`. Sur le commit `test:`, `npm test` échoue. Sur le commit `feat:`, `npm test` passe. |
-| Travail avec Claude Code | `sessions/` contient les sessions exportées. Les commits `test:` et `feat:` portent la ligne `Co-Authored-By: Claude`. |
-| Domaine isolé | `grep -rnE "from ['\"]" src/domaine` ne cite que des fichiers de `src/domaine`. |
-| Règles dans le domaine | Les refus de créneau, de capacité et de chevauchement sont codés dans `src/domaine`, pas dans les routes. |
-| Découpage | `TACHES.md` liste les tâches de chaque story. |
-| Cadrage | `CLAUDE.md` existe dès le premier commit de code. Il contient les 6 rubriques de la section « Contenu de `CLAUDE.md` ». |
+## Story 6 — Consulter le planning d'une salle
+
+En tant qu'employé, je veux visualiser les réservations d'une salle pour une journée afin d'identifier les créneaux libres.
+
+Critères d'acceptation :
+
+1. L'utilisateur sélectionne une salle et une date.
+2. Le planning est récupéré via GET /salles/{id}/planning?date=AAAA-MM-JJ.
+3. Les réservations apparaissent dans l'ordre chronologique.
+4. Le planning affiche une vue horaire de 08:00 à 20:00.
+5. Les créneaux occupés sont visuellement différenciés des créneaux libres.
+6. Chaque réservation affiche son horaire, son organisateur et son nombre de participants.
+7. L'utilisateur peut changer de date sans recharger la page.
+8. Un planning sans réservation affiche une journée entièrement libre.
+9. Les erreurs de chargement sont signalées à l'utilisateur.
+
+## Story 7 — Réserver une salle
+
+En tant qu'organisateur, je veux réserver une salle depuis l'interface afin d'organiser une réunion.
+
+Critères d'acceptation :
+
+1. L'utilisateur peut ouvrir un formulaire de réservation depuis une salle.
+2. Le formulaire contient la date, l'heure de début, l'heure de fin, l'e-mail de l'organisateur et le nombre de participants.
+3. Les horaires sont proposés par intervalles de 15 minutes.
+4. Les horaires sélectionnables respectent la plage 08:00–20:00.
+5. La durée doit être comprise entre 30 minutes et 4 heures.
+6. Le nombre de participants doit être compris entre 1 et la capacité de la salle.
+7. Les champs obligatoires et les formats sont validés avant l'envoi.
+8. La validation du formulaire appelle POST /salles/{id}/reservations.
+9. Une réservation réussie affiche une confirmation et actualise le planning.
+10. Une erreur CRENEAU_INVALIDE affiche un message explicite.
+11. Une erreur CAPACITE_DEPASSEE informe l'utilisateur de la capacité autorisée.
+12. Une erreur CHEVAUCHEMENT informe l'utilisateur que le créneau est déjà réservé.
+13. Le formulaire conserve les données saisies en cas d'erreur.
+14. Le bouton de validation est désactivé pendant l'envoi pour éviter les doublons.
+
+## Story 8 — Réserver depuis le planning
+
+En tant qu'organisateur, je veux sélectionner directement un créneau libre dans le planning afin de réserver plus rapidement.
+
+Critères d'acceptation :
+
+1. Les créneaux libres du planning sont interactifs.
+2. Un clic sur un créneau libre ouvre le formulaire de réservation.
+3. La salle, la date et l'heure de début sont préremplies.
+4. Une heure de fin valide est proposée automatiquement.
+5. L'utilisateur peut modifier les horaires avant validation.
+6. Les créneaux occupés sont visuellement identifiables et ne peuvent pas être sélectionnés comme créneaux libres.
+7. Après une réservation réussie, le planning affiche immédiatement le nouveau créneau occupé.
+8. Si un autre utilisateur a réservé le créneau entre-temps, l'erreur CHEVAUCHEMENT est affichée et le planning est actualisé.

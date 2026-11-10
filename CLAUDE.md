@@ -6,17 +6,94 @@
 - Utilise Express pour l'API REST.
 - Utilise Vitest pour les tests et Supertest pour les tests HTTP.
 - Stocke toutes les données en mémoire, sans base de données.
-- Ne développe aucune interface front-end.
 - Prévois les commandes `npm install`, `npm test` et `npm start` et documente-les dans `README.md`.
 
 ## Architecture
 
-- Respecte l'architecture DDD et sépare le code dans `src/domaine/`, `src/application/` et `src/infrastructure/`.
-- Place les règles métier dans `src/domaine/`.
-- N'importe aucun paquet externe ni aucun fichier extérieur à `src/domaine/` depuis le domaine.
-- Place les cas d'usage dans `src/application/` : charge les données, appelle le domaine, puis sauvegarde les résultats.
-- Place les repositories en mémoire et les routes Express dans `src/infrastructure/`.
-- Ne place aucune règle métier de validation de créneau, de capacité ou de chevauchement dans les routes Express.
+- Respecte l'architecture DDD dans le backend Express et le frontend Angular.
+- Sépare le backend et le frontend en deux applications indépendantes.
+- Organise chaque application en trois couches : domaine, application et infrastructure.
+- Place les règles métier dans la couche domaine.
+- N'importe aucun framework ni paquet externe dans le domaine.
+- Ne fais jamais dépendre le domaine de l'application ou de l'infrastructure.
+- Place les cas d'usage et l'orchestration des opérations dans la couche application.
+- Place les implémentations techniques, les accès aux données et les communications HTTP dans l'infrastructure.
+- Fais dépendre les couches externes des interfaces définies dans les couches internes.
+- Utilise le vocabulaire métier défini dans les spécifications.
+- Évite toute duplication inutile des règles métier entre Angular et Express.
+- Conserve le backend comme source de vérité pour les validations métier.
+
+### Backend Express
+
+- Place les objets valeur, agrégats, entités et interfaces de repositories dans `backend/src/domaine/`.
+- Place les cas d'usage dans `backend/src/application/`.
+- Place les repositories en mémoire et les routes Express dans `backend/src/infrastructure/`.
+- Interdis tout import extérieur à `backend/src/domaine/` depuis le domaine.
+- Ne place aucune règle métier de créneau, capacité ou chevauchement dans les routes Express.
+
+### Frontend Angular
+
+- Organise Angular selon les principes DDD.
+- Place les modèles métier, objets valeur et interfaces de repositories dans `frontend/src/app/domaine/`.
+- Place les cas d'usage et les services applicatifs dans `frontend/src/app/application/`.
+- Place les services HTTP, adaptateurs API et implémentations des repositories dans `frontend/src/app/infrastructure/`.
+- Place les composants Angular et les pages dans `frontend/src/app/presentation/`.
+- Utilise des composants Angular standalone.
+- Fais dépendre les composants des cas d'usage plutôt que directement des services HTTP.
+- Utilise l'injection de dépendances Angular pour relier les interfaces du domaine à leurs implémentations.
+- Utilise les Signals Angular pour l'état de présentation lorsque cela est pertinent.
+- Utilise RxJS pour les opérations asynchrones.
+- Limite le domaine frontend aux modèles et comportements nécessaires à l'interface.
+- Ne réimplémente pas les règles métier de réservation déjà garanties par le backend.
+
+### Tests
+
+- Utilise Vitest pour les tests unitaires du backend.
+- Utilise Supertest pour les tests HTTP du backend.
+- Utilise Cypress pour les tests de l'interface Angular.
+- Place les tests Cypress dans `frontend/cypress/`.
+- Respecte le cycle TDD défini dans ce fichier pour toutes les couches.
+
+### Arborescence cible
+
+```text
+backend/
+  src/
+    domaine/
+      modeles/
+      repositories/
+    application/
+      cas-utilisation/
+    infrastructure/
+      repositories/
+      http/
+  tests/
+
+frontend/
+  src/
+    app/
+      domaine/
+        modeles/
+        repositories/
+      application/
+        cas-utilisation/
+      infrastructure/
+        http/
+        repositories/
+      presentation/
+        pages/
+        composants/
+      app.config.ts
+      app.routes.ts
+  cypress/
+    e2e/
+    fixtures/
+    support/
+```
+
+- Adapte les sous-dossiers aux besoins réels sans créer de structures inutiles.
+- Respecte strictement le sens des dépendances entre les couches.
+
 
 ## Modèle
 
@@ -47,6 +124,27 @@
 - Retourne HTTP 400 avec le code `REQUETE_INVALIDE` pour tout corps de requête incomplet ou mal formaté.
 - Retourne HTTP 404 avec le code `SALLE_INCONNUE` pour toute salle inconnue.
 - Respecte les autres statuts et codes d'erreur définis dans les tâches issues des stories.
+
+
+## Interface et tests Cypress
+
+- Implémente l'interface conformément aux stories frontend de `TACHES.md`, sans anticiper de fonctionnalités.
+- Utilise Angular et TypeScript pour l'interface web.
+- Isole l'application Angular dans un dossier `frontend/` distinct du backend.
+- Privilégie les composants Angular standalone et les mécanismes natifs du framework.
+- Organise Angular en composants pour l'affichage, services pour les appels HTTP et modèles typés pour les données de l'API.
+- Fais communiquer Angular avec l'API REST Express existante.
+- Ne duplique pas les règles métier du domaine dans le frontend.
+- Affiche la liste des salles, le planning et le formulaire de réservation selon les tâches demandées.
+- Rends les formulaires accessibles : labels associés, navigation au clavier, messages d'erreur lisibles et focus visible.
+- Utilise Cypress pour tester les parcours utilisateur et leurs cas d'erreur.
+- Utilise `cy.intercept()` pour isoler les scénarios d'interface lorsque cela est pertinent.
+- Prévois des sélecteurs de test stables (`data-cy`) plutôt que des sélecteurs dépendants de la mise en forme.
+- Conserve Vitest et Supertest pour les tests backend.
+- Applique le même cycle TDD aux tests Cypress : un test, validation de l'échec, implémentation minimale, validation de la réussite, puis refactoring.
+- Attends la validation de l'utilisateur entre chaque étape du TDD.
+- Ne crée aucun commit sans demande explicite.
+- Documente les commandes permettant de lancer Angular et Cypress dans `README.md`.
 
 
 ## Méthode TDD
