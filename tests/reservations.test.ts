@@ -98,4 +98,17 @@ describe('POST /salles/:id/reservations', () => {
 
     expect(response.status).toBe(201);
   });
+
+  it('returns 422 CAPACITE_DEPASSEE when there are fewer than 1 participant', async () => {
+    const response = await postReservation('A', { participants: 0 });
+
+    expect(response.status).toBe(422);
+    expect(response.body).toEqual({ code: 'CAPACITE_DEPASSEE', message: expect.any(String) });
+  });
+
+  it('accepts 1 participant', async () => {
+    const response = await postReservation('A', { participants: 1 });
+
+    expect(response.status).toBe(201);
+  });
 });
